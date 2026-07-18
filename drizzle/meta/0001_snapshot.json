@@ -1,9 +1,154 @@
 {
-  "id": "bf182503-af85-41f9-99a1-2463d6ecb4fd",
-  "prevId": "ae0b54e4-28c6-4a42-95e9-20bc16709f21",
+  "id": "aeac8d0d-2a3a-40ca-812b-de552c83ef9a",
+  "prevId": "b6ba53a5-e15d-4a87-b32d-bc6a5df42cf5",
   "version": "7",
   "dialect": "postgresql",
   "tables": {
+    "public.companies": {
+      "name": "companies",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "name": {
+          "name": "name",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "email": {
+          "name": "email",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "phone_number": {
+          "name": "phone_number",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "email2": {
+          "name": "email2",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "phone_number2": {
+          "name": "phone_number2",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "address": {
+          "name": "address",
+          "type": "jsonb",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "license_number": {
+          "name": "license_number",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "status": {
+          "name": "status",
+          "type": "status",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'ACTIVE'"
+        },
+        "yearly_subscription_amount": {
+          "name": "yearly_subscription_amount",
+          "type": "numeric(10, 2)",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'0'"
+        },
+        "expired_at": {
+          "name": "expired_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "(NOW() + INTERVAL '1 year')"
+        },
+        "logo": {
+          "name": "logo",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "deleted_at": {
+          "name": "deleted_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "is_deleted": {
+          "name": "is_deleted",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "default": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "companies_email_unique": {
+          "name": "companies_email_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "email"
+          ]
+        },
+        "companies_phone_number_unique": {
+          "name": "companies_phone_number_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "phone_number"
+          ]
+        },
+        "companies_email2_unique": {
+          "name": "companies_email2_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "email2"
+          ]
+        },
+        "companies_phone_number2_unique": {
+          "name": "companies_phone_number2_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "phone_number2"
+          ]
+        }
+      },
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
     "public.users": {
       "name": "users",
       "schema": "",
@@ -85,6 +230,12 @@
           "notNull": true,
           "default": "'0'"
         },
+        "tenant_id": {
+          "name": "tenant_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
         "created_at": {
           "name": "created_at",
           "type": "timestamp",
@@ -114,7 +265,21 @@
         }
       },
       "indexes": {},
-      "foreignKeys": {},
+      "foreignKeys": {
+        "users_tenant_id_companies_id_fk": {
+          "name": "users_tenant_id_companies_id_fk",
+          "tableFrom": "users",
+          "tableTo": "companies",
+          "columnsFrom": [
+            "tenant_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
       "compositePrimaryKeys": {},
       "uniqueConstraints": {
         "users_email_unique": {
@@ -138,18 +303,6 @@
     }
   },
   "enums": {
-    "public.role": {
-      "name": "role",
-      "schema": "public",
-      "values": [
-        "MANAGER",
-        "DOCTOR",
-        "PHARMACIST",
-        "RECEPTIONIST",
-        "LAB_TECHNICIAN",
-        "BILLING"
-      ]
-    },
     "public.status": {
       "name": "status",
       "schema": "public",
@@ -158,6 +311,19 @@
         "INACTIVE",
         "SUSPENDED",
         "LEAVE"
+      ]
+    },
+    "public.role": {
+      "name": "role",
+      "schema": "public",
+      "values": [
+        "ADMIN",
+        "MANAGER",
+        "DOCTOR",
+        "PHARMACIST",
+        "RECEPTIONIST",
+        "LAB_TECHNICIAN",
+        "BILLING"
       ]
     }
   },

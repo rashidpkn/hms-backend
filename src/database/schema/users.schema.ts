@@ -1,23 +1,8 @@
-import { pgTable, pgEnum,decimal } from 'drizzle-orm/pg-core';
-import { AddressType, timestamps } from './columns.helpers';
+import { pgTable, pgEnum, decimal } from 'drizzle-orm/pg-core';
+import { AddressType, UserRoles, UserStatus, timestamps } from './columns.helpers';
+import { companiesTable } from './company.schema';
 
-export enum UserRoles {
-  MANAGER = 'MANAGER',
-  DOCTOR = 'DOCTOR',
-  PHARMACIST = 'PHARMACIST',
-  RECEPTIONIST = 'RECEPTIONIST',
-  LAB_TECHNICIAN = 'LAB_TECHNICIAN',
-  BILLING = 'BILLING'
-}
-
-export enum UserStatus {
-  ACTIVE = 'ACTIVE',
-  INACTIVE = 'INACTIVE',
-  SUSPENDED = 'SUSPENDED',
-  LEAVE = 'LEAVE'
-}
-
-export const UserRoleEnum = pgEnum('role', [UserRoles.MANAGER, UserRoles.DOCTOR, UserRoles.PHARMACIST, UserRoles.RECEPTIONIST, UserRoles.LAB_TECHNICIAN, UserRoles.BILLING]);
+export const UserRoleEnum = pgEnum('role', [UserRoles.ADMIN, UserRoles.MANAGER, UserRoles.DOCTOR, UserRoles.PHARMACIST, UserRoles.RECEPTIONIST, UserRoles.LAB_TECHNICIAN, UserRoles.BILLING]);
 export const UserStatusEnum = pgEnum('status', [UserStatus.ACTIVE, UserStatus.INACTIVE, UserStatus.SUSPENDED, UserStatus.LEAVE]);
 
 export const usersTable = pgTable('users', (t) => ({
@@ -33,5 +18,6 @@ export const usersTable = pgTable('users', (t) => ({
   role: UserRoleEnum().default(UserRoles.PHARMACIST).notNull(),
   address: t.jsonb('address').$type<AddressType>(),
   salary: decimal('salary', { precision: 10, scale: 2 }).default('0').notNull(),
+  tenantId: t.integer("tenant_id").notNull().references(() => companiesTable.id),
   ...timestamps,
 }));

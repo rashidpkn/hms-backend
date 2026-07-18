@@ -1,8 +1,7 @@
 
 import { drizzle } from 'drizzle-orm/node-postgres';
-import configuration from 'src/config/configuration';
-
-const db = drizzle(configuration().databaseUrl);
+import "dotenv/config";
+const db = drizzle(process.env.DATABASE_URL);
 
 export type DB = typeof db;
 
