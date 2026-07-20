@@ -29,10 +29,6 @@ export class RegisterUserDto {
   @Transform(({ value }: { value: string }) => value.trim().toLowerCase())
   email!: string;
 
-  @IsString()
-  @IsNotEmpty()
-  @Transform(({ value }: { value: string }) => value.replace(/\s+/g, '').toLowerCase())
-  username!: string;
 
   @IsString()
   @IsNotEmpty()
@@ -54,7 +50,7 @@ export class RegisterUserDto {
 
   @IsInt()
   @IsNotEmpty()
-  tenantId!: number;
+  companyId!: number;
 
   @IsEnum(UserRoles)
   role!: UserRoles;

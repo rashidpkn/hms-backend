@@ -1,6 +1,6 @@
 {
-  "id": "cc237150-2017-4463-a6fc-1e03d47d7552",
-  "prevId": "aeac8d0d-2a3a-40ca-812b-de552c83ef9a",
+  "id": "4c2bb653-1a6c-43f1-973c-be0dad46375f",
+  "prevId": "086d5308-00e2-485f-b7df-2104cd5c7135",
   "version": "7",
   "dialect": "postgresql",
   "tables": {
@@ -56,8 +56,8 @@
           "primaryKey": false,
           "notNull": false
         },
-        "status": {
-          "name": "status",
+        "company_status": {
+          "name": "company_status",
           "type": "status",
           "typeSchema": "public",
           "primaryKey": false,
@@ -218,6 +218,25 @@
           "primaryKey": false,
           "notNull": false
         },
+        "phone_number": {
+          "name": "phone_number",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "address": {
+          "name": "address",
+          "type": "jsonb",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "salary": {
+          "name": "salary",
+          "type": "numeric(10, 2)",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'0'"
+        },
         "created_at": {
           "name": "created_at",
           "type": "timestamp",
@@ -258,7 +277,7 @@
           "columnsTo": [
             "id"
           ],
-          "onDelete": "restrict",
+          "onDelete": "cascade",
           "onUpdate": "no action"
         }
       },
@@ -304,23 +323,11 @@
           "primaryKey": false,
           "notNull": true
         },
-        "username": {
-          "name": "username",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true
-        },
         "password": {
           "name": "password",
           "type": "text",
           "primaryKey": false,
           "notNull": true
-        },
-        "phone_number": {
-          "name": "phone_number",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
         },
         "last_login": {
           "name": "last_login",
@@ -328,37 +335,24 @@
           "primaryKey": false,
           "notNull": false
         },
-        "status": {
-          "name": "status",
+        "user_status": {
+          "name": "user_status",
           "type": "status",
           "typeSchema": "public",
           "primaryKey": false,
           "notNull": true,
           "default": "'ACTIVE'"
         },
-        "role": {
-          "name": "role",
+        "user_role": {
+          "name": "user_role",
           "type": "role",
           "typeSchema": "public",
           "primaryKey": false,
           "notNull": true,
           "default": "'PHARMACIST'"
         },
-        "address": {
-          "name": "address",
-          "type": "jsonb",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "salary": {
-          "name": "salary",
-          "type": "numeric(10, 2)",
-          "primaryKey": false,
-          "notNull": true,
-          "default": "'0'"
-        },
-        "tenant_id": {
-          "name": "tenant_id",
+        "company_id": {
+          "name": "company_id",
           "type": "integer",
           "primaryKey": false,
           "notNull": true
@@ -393,17 +387,17 @@
       },
       "indexes": {},
       "foreignKeys": {
-        "users_tenant_id_companies_id_fk": {
-          "name": "users_tenant_id_companies_id_fk",
+        "users_company_id_companies_id_fk": {
+          "name": "users_company_id_companies_id_fk",
           "tableFrom": "users",
           "tableTo": "companies",
           "columnsFrom": [
-            "tenant_id"
+            "company_id"
           ],
           "columnsTo": [
             "id"
           ],
-          "onDelete": "no action",
+          "onDelete": "restrict",
           "onUpdate": "no action"
         }
       },
@@ -414,13 +408,6 @@
           "nullsNotDistinct": false,
           "columns": [
             "email"
-          ]
-        },
-        "users_username_unique": {
-          "name": "users_username_unique",
-          "nullsNotDistinct": false,
-          "columns": [
-            "username"
           ]
         }
       },
@@ -438,6 +425,19 @@
         "INACTIVE",
         "SUSPENDED",
         "LEAVE"
+      ]
+    },
+    "public.working_day": {
+      "name": "working_day",
+      "schema": "public",
+      "values": [
+        "Sunday",
+        "Monday",
+        "Tuesday",
+        "Wednesday",
+        "Thursday",
+        "Friday",
+        "Saturday"
       ]
     },
     "public.role": {

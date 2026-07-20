@@ -12,22 +12,19 @@ export class UsersService {
 
   async registerUser(body: RegisterUserDto) {
     const existingUser = await this.db.query.usersTable.findFirst({
-      where: or(
-        eq(usersTable.email, body.email),
-        eq(usersTable.username, body.username),
-      ),
+      where: eq(usersTable.email, body.email), 
     });
     if (existingUser) {
       throw new BadRequestException(
-        'User with this email or username already exists',
+        'User with this email already exists',
       );
     }
 
     const validatedTenant = await this.db.query.companiesTable.findFirst({
-      where: eq(companiesTable.id, body.tenantId),
+      where: eq(companiesTable.id, body.companyId),
     });
     if (!validatedTenant) {
-      throw new BadRequestException('Invalid tenant ID');
+      throw new BadRequestException('Invalid company ID');
     }
 
     body.password = await bcrypt.hash(body.password, 10);
@@ -40,6 +37,10 @@ export class UsersService {
 
       const data2 = await this.db.insert(profilesTable).values({
         userId: data[0].id,
+        address: body.address,
+        phoneNumber: body.phoneNumber,
+        salary: body.salary,
+        workingDays:["Monday","Tuesday","Wednesday","Thursday","Friday"],
       }).returning().execute();
     return {
       message: 'User registered successfully',
@@ -60,6 +61,7 @@ export class UsersService {
   where: eq(usersTable.id, id),
   with: {
     company: true,
+    profile: true,
   },
 });
 

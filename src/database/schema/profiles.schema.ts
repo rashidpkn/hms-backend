@@ -1,6 +1,17 @@
-import { pgTable, jsonb } from 'drizzle-orm/pg-core';
+import { pgTable, jsonb, decimal } from 'drizzle-orm/pg-core';
 import { usersTable } from './users.schema';
-import { timestamps, workingDayEnum } from './columns.helpers';
+import { AddressType, timestamps } from './columns.helpers';
+import { pgEnum } from 'drizzle-orm/pg-core';
+
+export const workingDayEnum = pgEnum('working_day', [
+  'Sunday',
+  'Monday',
+  'Tuesday',
+  'Wednesday',
+  'Thursday',
+  'Friday',
+  'Saturday',
+]);
 
 export const profilesTable = pgTable('profiles', (t) => ({
   id: t.serial('id').primaryKey(),
@@ -8,7 +19,7 @@ export const profilesTable = pgTable('profiles', (t) => ({
   userId: t
     .integer('user_id')
     .references(() => usersTable.id, {
-      onDelete: 'restrict',
+      onDelete: 'cascade',
     })
     .notNull()
     .unique(),
@@ -37,6 +48,9 @@ export const profilesTable = pgTable('profiles', (t) => ({
   shiftStart: t.time('shift_start'),
 
   shiftEnd: t.time('shift_end'),
+  phoneNumber: t.text('phone_number'),
+  address: t.jsonb('address').$type<AddressType>(),
+  salary: decimal('salary', { precision: 10, scale: 2 }).default('0').notNull(),
 
   ...timestamps,
 }));

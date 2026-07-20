@@ -5,7 +5,7 @@ import { profilesTable } from "./profiles.schema";
 
 export const usersRelations = relations(usersTable, ({ one }) => ({
   company: one(companiesTable, {
-    fields: [usersTable.tenantId],
+    fields: [usersTable.companyId],
     references: [companiesTable.id],
   }),
   profile: one(profilesTable, {
