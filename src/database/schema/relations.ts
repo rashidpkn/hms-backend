@@ -4,7 +4,7 @@ import { companiesTable } from "./company.schema";
 import { profilesTable } from "./profiles.schema";
 import { patientsTable } from "./patients.schema";
 
-export const usersRelations = relations(usersTable, ({ one,many }) => ({
+export const usersRelations = relations(usersTable, ({ one, many }) => ({
   company: one(companiesTable, {
     fields: [usersTable.companyId],
     references: [companiesTable.id],
@@ -14,6 +14,7 @@ export const usersRelations = relations(usersTable, ({ one,many }) => ({
     references: [profilesTable.userId],
   }),
   patients: many(patientsTable),
+  patientsCreatedBy: many(patientsTable),
 }));
 
 export const companiesRelations = relations(companiesTable, ({ many }) => ({
@@ -33,5 +34,9 @@ export const patientsRelations = relations(patientsTable, ({ one }) => ({
     fields: [patientsTable.primaryDoctorId],
     references: [usersTable.id],
   }),
+  createdBy: one(usersTable, {
+    fields: [patientsTable.createdBy],
+    references: [usersTable.id],
+  })
 }));
 

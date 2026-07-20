@@ -16,7 +16,7 @@ export interface AddressType {
   country: string;
 }
 
-export const enum CompanyStatus {
+export enum CompanyStatus {
   ACTIVE = "ACTIVE",
   INACTIVE = "INACTIVE",
   SUSPENDED = "SUSPENDED",
@@ -40,7 +40,7 @@ export enum UserStatus {
 }
 
 
-export const enum BloodGroup {
+export enum BloodGroup {
   A_POSITIVE = "A+",
   A_NEGATIVE = "A-",
   B_POSITIVE = "B+",
@@ -51,7 +51,7 @@ export const enum BloodGroup {
   O_NEGATIVE = "O-",
 }
 
-export const enum Gender {
+export enum Gender {
   MALE = "Male",
   FEMALE = "Female",
   UNKNOWN = "Unknown",
@@ -62,8 +62,8 @@ export type AllergySeverity =
   | "Moderate"
   | "Severe";
 
-  export const enum PatientStatus {
-    ACTIVE = "ACTIVE",
-    INACTIVE = "INACTIVE",
-    DECEASED = "DECEASED",
-  }
+export enum PatientStatus {
+  ACTIVE = "ACTIVE",
+  INACTIVE = "INACTIVE",
+  DECEASED = "DECEASED",
+}

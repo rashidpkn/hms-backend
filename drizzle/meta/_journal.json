@@ -8,6 +8,13 @@
       "when": 1784548298006,
       "tag": "0000_perfect_sauron",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1784561837987,
+      "tag": "0001_nostalgic_the_executioner",
+      "breakpoints": true
     }
   ]
 }

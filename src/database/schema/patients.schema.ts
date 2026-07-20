@@ -11,14 +11,14 @@ export const patientsTable = pgTable('patients', (t) => ({
   id: t.serial('id').primaryKey(),
   firstName: t.text('first_name').notNull(),
   lastName: t.text('last_name').notNull(),
-  patientCode: t.varchar("patient_code", { length: 20 }).notNull().unique(),
+  patientCode: t.integer("patient_code").notNull().unique(),
   email: t.text('email'),
   phoneNumber: t.text('phone_number'),
   address: t.jsonb('address').$type<AddressType>(),
   primaryDoctorId: t.integer('primary_doctor_id').references(() => usersTable.id, {
     onDelete: 'restrict',
   }),
-  dateOfBirth: t.date('date_of_birth'),
+  dateOfBirth: t.timestamp('date_of_birth'),
   gender: GenderEnum('gender').default(Gender.UNKNOWN).notNull(),
   bloodGroup: BloodGroupEnum('blood_group'),
   allergies: t.jsonb('allergies').$type<{ allergen: string; reaction: string; severity: AllergySeverity }[]>(),
@@ -28,5 +28,8 @@ export const patientsTable = pgTable('patients', (t) => ({
   status: PatientStatusEnum()
     .notNull()
     .default(PatientStatus.ACTIVE),
+  createdBy: t.integer('created_by').references(() => usersTable.id, {
+    onDelete: 'restrict',
+  }).notNull(),
   ...timestamps,
 }));
