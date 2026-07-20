@@ -7,6 +7,7 @@ import { DatabaseModule } from './database/database.module';
 import { CompaniesModule } from './companies/companies.module';
 import { UsersModule } from './users/users.module';
 import { PatientsModule } from './patients/patients.module';
+import { JwtModule } from '@nestjs/jwt';
 
 @Module({
   imports: [
@@ -16,9 +17,10 @@ import { PatientsModule } from './patients/patients.module';
     DatabaseModule,
     CompaniesModule,
     UsersModule,
-    PatientsModule
+    PatientsModule,
+    JwtModule.register({ global: true }),
   ],
   controllers: [AppController],
   providers: [AppService],
 })
-export class AppModule {}
+export class AppModule { }
