@@ -1,5 +1,5 @@
 import { pgTable } from "drizzle-orm/pg-core";
-import { AddressType, timestamps,BloodGroup, Gender, AllergySeverity, PatientStatus } from "./columns.helpers";
+import { AddressType, timestamps, BloodGroup, Gender, AllergySeverity, PatientStatus } from "./columns.helpers";
 import { pgEnum } from "drizzle-orm/pg-core";
 import { usersTable } from "./users.schema";
 
@@ -25,8 +25,8 @@ export const patientsTable = pgTable('patients', (t) => ({
   emergencyContact: t.jsonb('emergency_contact').$type<{ name: string; relationship: string; phoneNumber: string }>(),
   insuranceDetails: t.jsonb('insurance_details').$type<{ providerName: string; policyNumber: string; coverageDetails?: string }>(),
   notes: t.text("notes"),
-  status: PatientStatusEnum("patient_status")
-  .notNull()
-  .default(PatientStatus.ACTIVE),
+  status: PatientStatusEnum()
+    .notNull()
+    .default(PatientStatus.ACTIVE),
   ...timestamps,
 }));

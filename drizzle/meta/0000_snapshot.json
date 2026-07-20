@@ -1,5 +1,5 @@
 {
-  "id": "831dcc5a-3b8e-486f-b5ef-613d4d652e06",
+  "id": "710cf363-4ecf-44ec-9cd8-f88aca8234d8",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -58,7 +58,7 @@
         },
         "status": {
           "name": "status",
-          "type": "status",
+          "type": "company_status",
           "typeSchema": "public",
           "primaryKey": false,
           "notNull": true,
@@ -163,6 +163,169 @@
       "checkConstraints": {},
       "isRLSEnabled": false
     },
+    "public.patients": {
+      "name": "patients",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "first_name": {
+          "name": "first_name",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "last_name": {
+          "name": "last_name",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "patient_code": {
+          "name": "patient_code",
+          "type": "varchar(20)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "email": {
+          "name": "email",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "phone_number": {
+          "name": "phone_number",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "address": {
+          "name": "address",
+          "type": "jsonb",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "primary_doctor_id": {
+          "name": "primary_doctor_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "date_of_birth": {
+          "name": "date_of_birth",
+          "type": "date",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "gender": {
+          "name": "gender",
+          "type": "gender",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'Unknown'"
+        },
+        "blood_group": {
+          "name": "blood_group",
+          "type": "blood_group",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "allergies": {
+          "name": "allergies",
+          "type": "jsonb",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "emergency_contact": {
+          "name": "emergency_contact",
+          "type": "jsonb",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "insurance_details": {
+          "name": "insurance_details",
+          "type": "jsonb",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "notes": {
+          "name": "notes",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "status": {
+          "name": "status",
+          "type": "patient_status",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'ACTIVE'"
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "deleted_at": {
+          "name": "deleted_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "is_deleted": {
+          "name": "is_deleted",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "default": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "patients_primary_doctor_id_users_id_fk": {
+          "name": "patients_primary_doctor_id_users_id_fk",
+          "tableFrom": "patients",
+          "tableTo": "users",
+          "columnsFrom": [
+            "primary_doctor_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "restrict",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "patients_patient_code_unique": {
+          "name": "patients_patient_code_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "patient_code"
+          ]
+        }
+      },
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
     "public.profiles": {
       "name": "profiles",
       "schema": "",
@@ -218,6 +381,55 @@
           "primaryKey": false,
           "notNull": false
         },
+        "phone_number": {
+          "name": "phone_number",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "address": {
+          "name": "address",
+          "type": "jsonb",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "salary": {
+          "name": "salary",
+          "type": "numeric(10, 2)",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'0'"
+        },
+        "profile_picture": {
+          "name": "profile_picture",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "signature": {
+          "name": "signature",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "department": {
+          "name": "department",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "specialization": {
+          "name": "specialization",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "qualifications": {
+          "name": "qualifications",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
         "created_at": {
           "name": "created_at",
           "type": "timestamp",
@@ -258,7 +470,7 @@
           "columnsTo": [
             "id"
           ],
-          "onDelete": "restrict",
+          "onDelete": "cascade",
           "onUpdate": "no action"
         }
       },
@@ -304,23 +516,11 @@
           "primaryKey": false,
           "notNull": true
         },
-        "username": {
-          "name": "username",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true
-        },
         "password": {
           "name": "password",
           "type": "text",
           "primaryKey": false,
           "notNull": true
-        },
-        "phone_number": {
-          "name": "phone_number",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
         },
         "last_login": {
           "name": "last_login",
@@ -330,7 +530,7 @@
         },
         "status": {
           "name": "status",
-          "type": "status",
+          "type": "user_status",
           "typeSchema": "public",
           "primaryKey": false,
           "notNull": true,
@@ -338,27 +538,14 @@
         },
         "role": {
           "name": "role",
-          "type": "role",
+          "type": "user_role",
           "typeSchema": "public",
           "primaryKey": false,
           "notNull": true,
           "default": "'PHARMACIST'"
         },
-        "address": {
-          "name": "address",
-          "type": "jsonb",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "salary": {
-          "name": "salary",
-          "type": "numeric(10, 2)",
-          "primaryKey": false,
-          "notNull": true,
-          "default": "'0'"
-        },
-        "tenant_id": {
-          "name": "tenant_id",
+        "company_id": {
+          "name": "company_id",
           "type": "integer",
           "primaryKey": false,
           "notNull": true
@@ -393,17 +580,17 @@
       },
       "indexes": {},
       "foreignKeys": {
-        "users_tenant_id_companies_id_fk": {
-          "name": "users_tenant_id_companies_id_fk",
+        "users_company_id_companies_id_fk": {
+          "name": "users_company_id_companies_id_fk",
           "tableFrom": "users",
           "tableTo": "companies",
           "columnsFrom": [
-            "tenant_id"
+            "company_id"
           ],
           "columnsTo": [
             "id"
           ],
-          "onDelete": "no action",
+          "onDelete": "restrict",
           "onUpdate": "no action"
         }
       },
@@ -415,13 +602,6 @@
           "columns": [
             "email"
           ]
-        },
-        "users_username_unique": {
-          "name": "users_username_unique",
-          "nullsNotDistinct": false,
-          "columns": [
-            "username"
-          ]
         }
       },
       "policies": {},
@@ -430,14 +610,45 @@
     }
   },
   "enums": {
-    "public.status": {
-      "name": "status",
+    "public.company_status": {
+      "name": "company_status",
       "schema": "public",
       "values": [
         "ACTIVE",
         "INACTIVE",
-        "SUSPENDED",
-        "LEAVE"
+        "SUSPENDED"
+      ]
+    },
+    "public.blood_group": {
+      "name": "blood_group",
+      "schema": "public",
+      "values": [
+        "A+",
+        "A-",
+        "B+",
+        "B-",
+        "AB+",
+        "AB-",
+        "O+",
+        "O-"
+      ]
+    },
+    "public.gender": {
+      "name": "gender",
+      "schema": "public",
+      "values": [
+        "Male",
+        "Female",
+        "Unknown"
+      ]
+    },
+    "public.patient_status": {
+      "name": "patient_status",
+      "schema": "public",
+      "values": [
+        "ACTIVE",
+        "INACTIVE",
+        "DECEASED"
       ]
     },
     "public.working_day": {
@@ -453,8 +664,8 @@
         "Saturday"
       ]
     },
-    "public.role": {
-      "name": "role",
+    "public.user_role": {
+      "name": "user_role",
       "schema": "public",
       "values": [
         "ADMIN",
@@ -464,6 +675,16 @@
         "RECEPTIONIST",
         "LAB_TECHNICIAN",
         "BILLING"
+      ]
+    },
+    "public.user_status": {
+      "name": "user_status",
+      "schema": "public",
+      "values": [
+        "ACTIVE",
+        "INACTIVE",
+        "SUSPENDED",
+        "LEAVE"
       ]
     }
   },

@@ -14,7 +14,7 @@ export const companiesTable = pgTable("companies", (t) => ({
     phoneNumber2: t.text("phone_number2").unique(),
     address: t.jsonb("address").$type<AddressType>(),
     licenseNumber: t.text("license_number").unique(),
-    status: CompanyStatusEnum("company_status").default(CompanyStatus.ACTIVE).notNull(),
+    status: CompanyStatusEnum().default(CompanyStatus.ACTIVE).notNull(),
     yearlySubscriptionAmount: decimal("yearly_subscription_amount", { precision: 10, scale: 2 }).default("0").notNull(),
     expiredAt: t.timestamp("expired_at").notNull().default(sql`(NOW() + INTERVAL '1 year')`),
     logo: t.text("logo"),

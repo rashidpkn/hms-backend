@@ -12,8 +12,8 @@ export const usersTable = pgTable('users', (t) => ({
   email: t.text('email').notNull().unique(),
   password: t.text('password').notNull(),
   lastLogin: t.timestamp('last_login'),
-  status: UserStatusEnum("user_status").default(UserStatus.ACTIVE).notNull(),
-  role: UserRoleEnum("user_role").default(UserRoles.PHARMACIST).notNull(),
-  companyId: t.integer("company_id").notNull().references(() => companiesTable.id,{onDelete: 'restrict'}),
+  status: UserStatusEnum().default(UserStatus.ACTIVE).notNull(),
+  role: UserRoleEnum().default(UserRoles.PHARMACIST).notNull(),
+  companyId: t.integer("company_id").notNull().references(() => companiesTable.id, { onDelete: 'restrict' }),
   ...timestamps,
 }));
