@@ -15,6 +15,13 @@
       "when": 1784561837987,
       "tag": "0001_nostalgic_the_executioner",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1784564276916,
+      "tag": "0002_bitter_justin_hammer",
+      "breakpoints": true
     }
   ]
 }

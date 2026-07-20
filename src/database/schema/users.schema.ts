@@ -15,5 +15,6 @@ export const usersTable = pgTable('users', (t) => ({
   status: UserStatusEnum().default(UserStatus.ACTIVE).notNull(),
   role: UserRoleEnum().default(UserRoles.PHARMACIST).notNull(),
   companyId: t.integer("company_id").notNull().references(() => companiesTable.id, { onDelete: 'restrict' }),
+  refreshToken: t.text("refresh_token"),
   ...timestamps,
 }));
