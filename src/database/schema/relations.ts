@@ -1,8 +1,8 @@
-import { relations } from "drizzle-orm";
-import { usersTable } from "./users.schema";
-import { companiesTable } from "./company.schema";
-import { profilesTable } from "./profiles.schema";
-import { patientsTable } from "./patients.schema";
+import { relations } from 'drizzle-orm';
+import { usersTable } from './users.schema';
+import { companiesTable } from './company.schema';
+import { profilesTable } from './profiles.schema';
+import { patientsTable } from './patients.schema';
 
 export const usersRelations = relations(usersTable, ({ one, many }) => ({
   company: one(companiesTable, {
@@ -19,7 +19,7 @@ export const usersRelations = relations(usersTable, ({ one, many }) => ({
 
 export const companiesRelations = relations(companiesTable, ({ many }) => ({
   users: many(usersTable),
-  patients: many(patientsTable)
+  patients: many(patientsTable),
 }));
 
 export const profilesRelations = relations(profilesTable, ({ one }) => ({
@@ -41,6 +41,5 @@ export const patientsRelations = relations(patientsTable, ({ one }) => ({
   company: one(companiesTable, {
     fields: [patientsTable.companyId],
     references: [companiesTable.id],
-  })
+  }),
 }));
-

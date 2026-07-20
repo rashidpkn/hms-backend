@@ -29,7 +29,6 @@ export class RegisterUserDto {
   @Transform(({ value }: { value: string }) => value.trim().toLowerCase())
   email!: string;
 
-
   @IsString()
   @IsNotEmpty()
   @Transform(({ value }: { value: string }) => value.trim())
@@ -45,7 +44,7 @@ export class RegisterUserDto {
 
   @IsString()
   @IsNotEmpty()
-  @Transform(({ value }: { value: string|number }) => value.toString().trim())
+  @Transform(({ value }: { value: string | number }) => value.toString().trim())
   salary!: string;
 
   @IsInt()

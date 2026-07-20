@@ -12,12 +12,10 @@ export class UsersService {
 
   async registerUser(body: RegisterUserDto) {
     const existingUser = await this.db.query.usersTable.findFirst({
-      where: eq(usersTable.email, body.email), 
+      where: eq(usersTable.email, body.email),
     });
     if (existingUser) {
-      throw new BadRequestException(
-        'User with this email already exists',
-      );
+      throw new BadRequestException('User with this email already exists');
     }
 
     const validatedTenant = await this.db.query.companiesTable.findFirst({
@@ -35,21 +33,27 @@ export class UsersService {
       .returning()
       .execute();
 
-      const data2 = await this.db.insert(profilesTable).values({
+    const data2 = await this.db
+      .insert(profilesTable)
+      .values({
         userId: data[0].id,
         address: body.address,
         phoneNumber: body.phoneNumber,
         salary: body.salary,
-        workingDays:["Monday","Tuesday","Wednesday","Thursday","Friday"],
-      }).returning().execute();
+        workingDays: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'],
+      })
+      .returning()
+      .execute();
     return {
       message: 'User registered successfully',
-      data: {...data[0],...data2[0]},
+      data: { ...data[0], ...data2[0] },
     };
   }
 
   async getAllUsers() {
-    const data = await this.db.query.usersTable.findMany({with: {company: true}});
+    const data = await this.db.query.usersTable.findMany({
+      with: { company: true },
+    });
     return {
       message: 'Users fetched successfully',
       data: data,
@@ -58,12 +62,12 @@ export class UsersService {
 
   async getUserById(id: number) {
     const data = await this.db.query.usersTable.findFirst({
-  where: eq(usersTable.id, id),
-  with: {
-    company: true,
-    profile: true,
-  },
-});
+      where: eq(usersTable.id, id),
+      with: {
+        company: true,
+        profile: true,
+      },
+    });
 
     if (!data) {
       throw new BadRequestException('User not found');

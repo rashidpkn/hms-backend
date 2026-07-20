@@ -1,12 +1,11 @@
-
-import { boolean, timestamp } from "drizzle-orm/pg-core";
+import { boolean, timestamp } from 'drizzle-orm/pg-core';
 
 export const timestamps = {
-  createdAt: timestamp("created_at").defaultNow().notNull(),
-  updatedAt: timestamp("updated_at").defaultNow().notNull(),
-  deletedAt: timestamp("deleted_at"),
-  isDeleted: boolean("is_deleted").default(false).notNull(),
-}
+  createdAt: timestamp('created_at').defaultNow().notNull(),
+  updatedAt: timestamp('updated_at').defaultNow().notNull(),
+  deletedAt: timestamp('deleted_at'),
+  isDeleted: boolean('is_deleted').default(false).notNull(),
+};
 
 export interface AddressType {
   street: string;
@@ -17,9 +16,9 @@ export interface AddressType {
 }
 
 export enum CompanyStatus {
-  ACTIVE = "ACTIVE",
-  INACTIVE = "INACTIVE",
-  SUSPENDED = "SUSPENDED",
+  ACTIVE = 'ACTIVE',
+  INACTIVE = 'INACTIVE',
+  SUSPENDED = 'SUSPENDED',
 }
 
 export enum UserRoles {
@@ -29,41 +28,37 @@ export enum UserRoles {
   PHARMACIST = 'PHARMACIST',
   RECEPTIONIST = 'RECEPTIONIST',
   LAB_TECHNICIAN = 'LAB_TECHNICIAN',
-  BILLING = 'BILLING'
+  BILLING = 'BILLING',
 }
 
 export enum UserStatus {
   ACTIVE = 'ACTIVE',
   INACTIVE = 'INACTIVE',
   SUSPENDED = 'SUSPENDED',
-  LEAVE = 'LEAVE'
+  LEAVE = 'LEAVE',
 }
 
-
 export enum BloodGroup {
-  A_POSITIVE = "A+",
-  A_NEGATIVE = "A-",
-  B_POSITIVE = "B+",
-  B_NEGATIVE = "B-",
-  AB_POSITIVE = "AB+",
-  AB_NEGATIVE = "AB-",
-  O_POSITIVE = "O+",
-  O_NEGATIVE = "O-",
+  A_POSITIVE = 'A+',
+  A_NEGATIVE = 'A-',
+  B_POSITIVE = 'B+',
+  B_NEGATIVE = 'B-',
+  AB_POSITIVE = 'AB+',
+  AB_NEGATIVE = 'AB-',
+  O_POSITIVE = 'O+',
+  O_NEGATIVE = 'O-',
 }
 
 export enum Gender {
-  MALE = "Male",
-  FEMALE = "Female",
-  UNKNOWN = "Unknown",
+  MALE = 'Male',
+  FEMALE = 'Female',
+  UNKNOWN = 'Unknown',
 }
 
-export type AllergySeverity =
-  | "Mild"
-  | "Moderate"
-  | "Severe";
+export type AllergySeverity = 'Mild' | 'Moderate' | 'Severe';
 
 export enum PatientStatus {
-  ACTIVE = "ACTIVE",
-  INACTIVE = "INACTIVE",
-  DECEASED = "DECEASED",
+  ACTIVE = 'ACTIVE',
+  INACTIVE = 'INACTIVE',
+  DECEASED = 'DECEASED',
 }

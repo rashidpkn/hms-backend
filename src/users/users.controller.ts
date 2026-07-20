@@ -1,4 +1,12 @@
-import { Body, Controller, Get, Param, Post, Put, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Param,
+  Post,
+  Put,
+  UseGuards,
+} from '@nestjs/common';
 import { UsersService } from './users.service';
 import { RegisterUserDto } from './dto/register.dto';
 import { RolesGuard } from './auth/roles.guard';
@@ -8,7 +16,7 @@ import { Roles } from './auth/roles.decorator';
 
 @Controller('users')
 export class UsersController {
-  constructor(private readonly usersService: UsersService) { }
+  constructor(private readonly usersService: UsersService) {}
 
   //register user
   @UseGuards(AuthGuard, RolesGuard)

@@ -1,4 +1,13 @@
-import { Body, Controller, Delete, Get, Param, Post, Put, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Post,
+  Put,
+  UseGuards,
+} from '@nestjs/common';
 import { CompaniesService } from './companies.service';
 import { CreateCompanyDto } from './dto/CreateCompany.dto';
 import { UpdateCompanyDto } from './dto/UpdateCompany.dto';
@@ -12,11 +21,13 @@ import { UserRoles } from 'src/database/schema/columns.helpers';
 @Roles(UserRoles.ADMIN)
 @Controller('companies')
 export class CompaniesController {
-  constructor(private readonly companiesService: CompaniesService) { }
+  constructor(private readonly companiesService: CompaniesService) {}
 
   @Post()
   //create
-  async createCompany(@Body() createCompanyDto: CreateCompanyDto): Promise<CommonResponse<unknown>> {
+  async createCompany(
+    @Body() createCompanyDto: CreateCompanyDto,
+  ): Promise<CommonResponse<unknown>> {
     return await this.companiesService.create(createCompanyDto);
   }
 
@@ -34,7 +45,10 @@ export class CompaniesController {
 
   @Put(':id')
   //update company
-  async updateCompany(@Param('id') id: number, @Body() updateCompanyDto: UpdateCompanyDto) {
+  async updateCompany(
+    @Param('id') id: number,
+    @Body() updateCompanyDto: UpdateCompanyDto,
+  ) {
     return this.companiesService.update(id, updateCompanyDto);
   }
 
