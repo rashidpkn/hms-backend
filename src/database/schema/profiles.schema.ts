@@ -51,6 +51,10 @@ export const profilesTable = pgTable('profiles', (t) => ({
   phoneNumber: t.text('phone_number'),
   address: t.jsonb('address').$type<AddressType>(),
   salary: decimal('salary', { precision: 10, scale: 2 }).default('0').notNull(),
-
+  profilePicture: t.text('profile_picture'),
+  signature: t.text('signature'),
+  department: t.text('department'),
+  specialization: t.text('specialization'),
+  qualifications: t.text('qualifications'),
   ...timestamps,
 }));

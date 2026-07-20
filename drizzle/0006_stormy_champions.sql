@@ -1,0 +1,1 @@
+ALTER TABLE "patients" RENAME COLUMN "status" TO "patient_status";

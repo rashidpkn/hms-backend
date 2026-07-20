@@ -38,3 +38,32 @@ export enum UserStatus {
   SUSPENDED = 'SUSPENDED',
   LEAVE = 'LEAVE'
 }
+
+
+export const enum BloodGroup {
+  A_POSITIVE = "A+",
+  A_NEGATIVE = "A-",
+  B_POSITIVE = "B+",
+  B_NEGATIVE = "B-",
+  AB_POSITIVE = "AB+",
+  AB_NEGATIVE = "AB-",
+  O_POSITIVE = "O+",
+  O_NEGATIVE = "O-",
+}
+
+export const enum Gender {
+  MALE = "Male",
+  FEMALE = "Female",
+  UNKNOWN = "Unknown",
+}
+
+export type AllergySeverity =
+  | "Mild"
+  | "Moderate"
+  | "Severe";
+
+  export const enum PatientStatus {
+    ACTIVE = "ACTIVE",
+    INACTIVE = "INACTIVE",
+    DECEASED = "DECEASED",
+  }
