@@ -1,14 +1,20 @@
-import { Body, Controller, Delete, Get, Post, Put } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Post, Put, UseGuards } from '@nestjs/common';
 import { PatientsService } from './patients.service';
 import { RegisterPatientDto } from './dto/register.dto';
+import { AuthGuard } from 'src/users/auth/auth.guard';
+import { type AuthUser, GetUser } from 'src/users/auth/getUser.decorator';
 
+@UseGuards(AuthGuard)
 @Controller('patients')
 export class PatientsController {
   constructor(private readonly patientsService: PatientsService) { }
 
   //register patient
+
   @Post()
-  async create(@Body() createPatientDto: RegisterPatientDto) {
+  async create(@Body() createPatientDto: RegisterPatientDto, @GetUser() user: AuthUser) {
+    createPatientDto.createdBy = user.id;
+    createPatientDto.companyId = user.companyId;
     return await this.patientsService.create(createPatientDto);
   }
 

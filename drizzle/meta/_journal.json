@@ -22,6 +22,13 @@
       "when": 1784564276916,
       "tag": "0002_bitter_justin_hammer",
       "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1784567805082,
+      "tag": "0003_glossy_oracle",
+      "breakpoints": true
     }
   ]
 }

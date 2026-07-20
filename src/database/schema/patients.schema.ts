@@ -2,6 +2,7 @@ import { pgTable } from "drizzle-orm/pg-core";
 import { AddressType, timestamps, BloodGroup, Gender, AllergySeverity, PatientStatus } from "./columns.helpers";
 import { pgEnum } from "drizzle-orm/pg-core";
 import { usersTable } from "./users.schema";
+import { companiesTable } from "./company.schema";
 
 export const BloodGroupEnum = pgEnum("blood_group", [BloodGroup.A_POSITIVE, BloodGroup.A_NEGATIVE, BloodGroup.B_POSITIVE, BloodGroup.B_NEGATIVE, BloodGroup.AB_POSITIVE, BloodGroup.AB_NEGATIVE, BloodGroup.O_POSITIVE, BloodGroup.O_NEGATIVE]);
 export const GenderEnum = pgEnum("gender", [Gender.MALE, Gender.FEMALE, Gender.UNKNOWN]);
@@ -29,6 +30,9 @@ export const patientsTable = pgTable('patients', (t) => ({
     .notNull()
     .default(PatientStatus.ACTIVE),
   createdBy: t.integer('created_by').references(() => usersTable.id, {
+    onDelete: 'restrict',
+  }).notNull(),
+  companyId: t.integer('company_id').references(() => companiesTable.id, {
     onDelete: 'restrict',
   }).notNull(),
   ...timestamps,

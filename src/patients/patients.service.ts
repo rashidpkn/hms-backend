@@ -14,8 +14,6 @@ export class PatientsService {
         })
         createPatientDto.patientCode = (lastPatient?.patientCode ?? 0) + 1;
 
-        createPatientDto.createdBy = 1 // need to change before production
-
         const data = await this.db.insert(patientsTable).values(createPatientDto).returning();
         return {
             data: data[0],

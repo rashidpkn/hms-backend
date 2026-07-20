@@ -22,8 +22,7 @@ export class AuthController {
     return this.authService.refreshToken(body);
   }
 
-  @UseGuards(AuthGuard, RolesGuard)
-  @Roles(UserRoles.ADMIN)
+  @UseGuards(AuthGuard)
   @Get('verify')
   verifyToken(@GetUser() user: AuthUser) {
     return user;

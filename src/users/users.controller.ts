@@ -1,36 +1,50 @@
-import { Body, Controller, Get, Param, Post } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, Put, UseGuards } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { RegisterUserDto } from './dto/register.dto';
+import { RolesGuard } from './auth/roles.guard';
+import { AuthGuard } from './auth/auth.guard';
+import { UserRoles } from 'src/database/schema/columns.helpers';
+import { Roles } from './auth/roles.decorator';
 
 @Controller('users')
 export class UsersController {
-  constructor(private readonly usersService: UsersService) {}
+  constructor(private readonly usersService: UsersService) { }
 
   //register user
+  @UseGuards(AuthGuard, RolesGuard)
+  @Roles(UserRoles.ADMIN, UserRoles.MANAGER)
   @Post()
   registerUser(@Body() body: RegisterUserDto) {
     return this.usersService.registerUser(body);
   }
 
   //get all users
+  @UseGuards(AuthGuard, RolesGuard)
+  @Roles(UserRoles.ADMIN, UserRoles.MANAGER)
   @Get()
   getAllUsers() {
     return this.usersService.getAllUsers();
   }
 
   //get user by id
+  @UseGuards(AuthGuard, RolesGuard)
+  @Roles(UserRoles.ADMIN, UserRoles.MANAGER)
   @Get(':id')
   getUserById(@Param('id') id: number) {
     return this.usersService.getUserById(id);
   }
 
   //update user by id
-  @Post(':id')
+  @UseGuards(AuthGuard, RolesGuard)
+  @Roles(UserRoles.ADMIN, UserRoles.MANAGER)
+  @Put(':id')
   updateUserById() {
     // return this.usersService.updateUserById();
   }
 
   //delete user by id
+  @UseGuards(AuthGuard, RolesGuard)
+  @Roles(UserRoles.ADMIN, UserRoles.MANAGER)
   @Post(':id')
   deleteUserById() {
     // return this.usersService.deleteUserById();

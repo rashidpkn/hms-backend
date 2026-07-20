@@ -1,10 +1,15 @@
-import { Body, Controller, Delete, Get, Param, Post, Put } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post, Put, UseGuards } from '@nestjs/common';
 import { CompaniesService } from './companies.service';
 import { CreateCompanyDto } from './dto/CreateCompany.dto';
 import { UpdateCompanyDto } from './dto/UpdateCompany.dto';
 import { CommonResponse } from 'helpers/common.helpers';
+import { AuthGuard } from 'src/users/auth/auth.guard';
+import { RolesGuard } from 'src/users/auth/roles.guard';
+import { Roles } from 'src/users/auth/roles.decorator';
+import { UserRoles } from 'src/database/schema/columns.helpers';
 
-
+@UseGuards(AuthGuard, RolesGuard)
+@Roles(UserRoles.ADMIN)
 @Controller('companies')
 export class CompaniesController {
   constructor(private readonly companiesService: CompaniesService) { }

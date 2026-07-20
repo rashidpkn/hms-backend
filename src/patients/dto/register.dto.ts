@@ -66,4 +66,7 @@ export class RegisterPatientDto {
 
     @IsEmpty()
     createdBy!: number;
+
+    @IsEmpty()
+    companyId!: number;
 }
