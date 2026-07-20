@@ -38,3 +38,15 @@ export enum UserStatus {
   SUSPENDED = 'SUSPENDED',
   LEAVE = 'LEAVE'
 }
+
+import { pgEnum } from "drizzle-orm/pg-core";
+
+export const workingDayEnum = pgEnum("working_day", [
+  "Sunday",
+  "Monday",
+  "Tuesday",
+  "Wednesday",
+  "Thursday",
+  "Friday",
+  "Saturday",
+]);

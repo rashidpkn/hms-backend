@@ -1,0 +1,74 @@
+import { BadRequestException, Injectable } from '@nestjs/common';
+import type { DB } from 'src/database/client';
+import { InjectDb } from 'src/database/database.provider';
+import { RegisterUserDto } from './dto/register.dto';
+import { companiesTable, profilesTable, usersTable } from 'src/database/schema';
+import { eq, or } from 'drizzle-orm';
+import * as bcrypt from 'bcrypt';
+
+@Injectable()
+export class UsersService {
+  constructor(@InjectDb() private readonly db: DB) {}
+
+  async registerUser(body: RegisterUserDto) {
+    const existingUser = await this.db.query.usersTable.findFirst({
+      where: or(
+        eq(usersTable.email, body.email),
+        eq(usersTable.username, body.username),
+      ),
+    });
+    if (existingUser) {
+      throw new BadRequestException(
+        'User with this email or username already exists',
+      );
+    }
+
+    const validatedTenant = await this.db.query.companiesTable.findFirst({
+      where: eq(companiesTable.id, body.tenantId),
+    });
+    if (!validatedTenant) {
+      throw new BadRequestException('Invalid tenant ID');
+    }
+
+    body.password = await bcrypt.hash(body.password, 10);
+
+    const data = await this.db
+      .insert(usersTable)
+      .values(body)
+      .returning()
+      .execute();
+
+      const data2 = await this.db.insert(profilesTable).values({
+        userId: data[0].id,
+      }).returning().execute();
+    return {
+      message: 'User registered successfully',
+      data: {...data[0],...data2[0]},
+    };
+  }
+
+  async getAllUsers() {
+    const data = await this.db.query.usersTable.findMany({with: {company: true}});
+    return {
+      message: 'Users fetched successfully',
+      data: data,
+    };
+  }
+
+  async getUserById(id: number) {
+    const data = await this.db.query.usersTable.findFirst({
+  where: eq(usersTable.id, id),
+  with: {
+    company: true,
+  },
+});
+
+    if (!data) {
+      throw new BadRequestException('User not found');
+    }
+    return {
+      message: 'User fetched successfully',
+      data: data,
+    };
+  }
+}

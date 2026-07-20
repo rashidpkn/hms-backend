@@ -50,7 +50,7 @@ export class CompaniesService {
     }
 
     async findAll(): Promise<CommonResponse<{}[]>> {
-        const data = await this.db.query.companiesTable.findMany({ where: eq(companiesTable.isDeleted, false) });
+        const data = await this.db.query.companiesTable.findMany({ where: eq(companiesTable.isDeleted, false)});
         return {
             data,
             message: "Companies fetched successfully",

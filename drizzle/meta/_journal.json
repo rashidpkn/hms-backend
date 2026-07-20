@@ -15,6 +15,13 @@
       "when": 1784407676793,
       "tag": "0001_stormy_blacklash",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1784537107930,
+      "tag": "0002_thankful_azazel",
+      "breakpoints": true
     }
   ]
 }

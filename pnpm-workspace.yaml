@@ -4,3 +4,10 @@ allowBuilds:
   esbuild: true
   msgpackr-extract: true
   unrs-resolver: true
+
+onlyBuiltDependencies:
+  - '@scarf/scarf'
+  - bcrypt
+  - esbuild
+  - msgpackr-extract
+  - unrs-resolver

@@ -6,17 +6,17 @@ export class CreateCompanyDto {
     @IsString()
     @IsNotEmpty()
     @Transform(({ value }: { value: string }) => value.trim())
-    name: string;
+    name!: string;
 
     @IsEmail()
     @IsNotEmpty()
     @Transform(({ value }: { value: string }) => value.trim().toLowerCase())
-    email: string;
+    email!: string;
 
     @IsPhoneNumber()
     @IsNotEmpty()
     @Transform(({ value }: { value: string }) => value.trim())
-    phoneNumber: string;
+    phoneNumber!: string;
 
     @IsEmail()
     @IsOptional()
@@ -29,7 +29,7 @@ export class CreateCompanyDto {
     phoneNumber2?: string;
 
     @IsOptional()
-    address: columnsHelpers.AddressType;
+    address!: columnsHelpers.AddressType;
 
     @IsEnum([columnsHelpers.CompanyStatus.ACTIVE, columnsHelpers.CompanyStatus.INACTIVE, columnsHelpers.CompanyStatus.SUSPENDED])
     @IsOptional()
@@ -38,12 +38,12 @@ export class CreateCompanyDto {
     @IsString()
     @IsOptional()
     @Transform(({ value }: { value: string }) => value.trim())
-    licenseNumber: string;
+    licenseNumber!: string;
 
     @IsString()
     @IsNotEmpty()
     @Transform(({ value }: { value: string }) => value.trim())
-    yearlySubscriptionAmount: string;
+    yearlySubscriptionAmount!: string;
 
     @IsString()
     @IsOptional()
