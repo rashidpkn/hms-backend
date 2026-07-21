@@ -3,6 +3,7 @@ import { usersTable } from './users.schema';
 import { companiesTable } from './company.schema';
 import { profilesTable } from './profiles.schema';
 import { patientsTable } from './patients.schema';
+import { appointmentsTable } from './appointments.schema';
 
 export const usersRelations = relations(usersTable, ({ one, many }) => ({
   company: one(companiesTable, {
@@ -15,11 +16,13 @@ export const usersRelations = relations(usersTable, ({ one, many }) => ({
   }),
   patients: many(patientsTable),
   patientsCreatedBy: many(patientsTable),
+  appointments: many(appointmentsTable),
 }));
 
 export const companiesRelations = relations(companiesTable, ({ many }) => ({
   users: many(usersTable),
   patients: many(patientsTable),
+  appointments: many(appointmentsTable),
 }));
 
 export const profilesRelations = relations(profilesTable, ({ one }) => ({
@@ -40,6 +43,22 @@ export const patientsRelations = relations(patientsTable, ({ one }) => ({
   }),
   company: one(companiesTable, {
     fields: [patientsTable.companyId],
+    references: [companiesTable.id],
+  }),
+}));
+
+
+export const appointmentsRelations = relations(appointmentsTable, ({ one }) => ({
+  patient: one(patientsTable, {
+    fields: [appointmentsTable.patientId],
+    references: [patientsTable.id],
+  }),
+  doctor: one(usersTable, {
+    fields: [appointmentsTable.doctorId],
+    references: [usersTable.id],
+  }),
+  company: one(companiesTable, {
+    fields: [appointmentsTable.companyId],
     references: [companiesTable.id],
   }),
 }));

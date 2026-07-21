@@ -3,15 +3,17 @@ import { AppointmentMedium, AppointmentStatus, AppointmentType, timestamps } fro
 import { patientsTable } from "./patients.schema";
 import { usersTable } from "./users.schema";
 import { pgEnum } from "drizzle-orm/pg-core";
+import { companiesTable } from "./company.schema";
 
 export const appointmentStatusEnum = pgEnum("appointment_status", AppointmentStatus)
 export const appointmentMediumEnum = pgEnum("appointment_medium", AppointmentMedium)
 export const appointmentTypeEnum = pgEnum("appointment_type", AppointmentType)
 
-export const appointmentsTables = pgTable("appointments", (t) => ({
+export const appointmentsTable = pgTable("appointments", (t) => ({
     id: t.serial("id").primaryKey(),
     patientId: t.integer("patient_id").references(() => patientsTable.id).notNull(),
     doctorId: t.integer("doctor_id").references(() => usersTable.id).notNull(),
+    companyId: t.integer("company_id").references(() => companiesTable.id).notNull(),
     date: t.date("appointment_date").notNull(),
     time: t.time("appointment_time").notNull(),
     medium: appointmentMediumEnum().notNull().default(AppointmentMedium.OFFLINE),
