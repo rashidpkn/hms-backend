@@ -8,6 +8,7 @@ import {
   IsNumber,
   IsOptional,
   IsPhoneNumber,
+  IsPositive,
   IsString,
 } from 'class-validator';
 import type { AddressType } from 'src/database/schema/columns.helpers';
@@ -35,7 +36,7 @@ export class RegisterUserDto {
   password!: string;
 
   @IsPhoneNumber()
-  @IsNotEmpty()
+  @IsOptional()
   @Transform(({ value }: { value: string }) => value.replace(/\s+/g, ''))
   phoneNumber!: string;
 
@@ -43,10 +44,11 @@ export class RegisterUserDto {
   address?: AddressType;
 
   @IsString()
-  @IsNotEmpty()
+  @IsOptional()
   @Transform(({ value }: { value: string | number }) => value.toString().trim())
   salary!: string;
 
+  @IsPositive()
   @IsInt()
   @IsNotEmpty()
   companyId!: number;

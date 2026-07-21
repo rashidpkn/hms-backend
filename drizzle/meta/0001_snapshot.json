@@ -1,6 +1,6 @@
 {
-  "id": "1febed84-d300-45af-82fa-929c7c620225",
-  "prevId": "00000000-0000-0000-0000-000000000000",
+  "id": "40f06135-53ea-4239-8460-8c1e917013ab",
+  "prevId": "1febed84-d300-45af-82fa-929c7c620225",
   "version": "7",
   "dialect": "postgresql",
   "tables": {
@@ -740,15 +740,7 @@
         }
       },
       "compositePrimaryKeys": {},
-      "uniqueConstraints": {
-        "patients_patient_code_unique": {
-          "name": "patients_patient_code_unique",
-          "nullsNotDistinct": false,
-          "columns": [
-            "patient_code"
-          ]
-        }
-      },
+      "uniqueConstraints": {},
       "policies": {},
       "checkConstraints": {},
       "isRLSEnabled": false

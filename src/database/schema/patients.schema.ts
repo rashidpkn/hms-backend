@@ -18,7 +18,7 @@ export const patientsTable = pgTable('patients', (t) => ({
   id: t.serial('id').primaryKey(),
   firstName: t.text('first_name').notNull(),
   lastName: t.text('last_name').notNull(),
-  patientCode: t.integer('patient_code').notNull().unique(),
+  patientCode: t.integer('patient_code').notNull(),
   email: t.text('email'),
   phoneNumber: t.text('phone_number'),
   address: t.jsonb('address').$type<AddressType>(),
@@ -59,7 +59,7 @@ export const patientsTable = pgTable('patients', (t) => ({
       onDelete: 'restrict',
     })
     .notNull(),
-    
-    
+
+
   ...timestamps,
 }));

@@ -79,9 +79,6 @@ export enum AppointmentMedium {
 
 export enum AppointmentStatus {
   PENDING = 'Pending',
-  CONFIRMED = 'Confirmed',
   CANCELLED = 'Cancelled',
   COMPLETED = 'Completed',
-  RESCHEDULED = 'Rescheduled',
-  NO_SHOW = 'No Show',
 }

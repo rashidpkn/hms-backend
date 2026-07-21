@@ -1,5 +1,5 @@
 CREATE TYPE "public"."appointment_medium" AS ENUM('Online', 'Offline');--> statement-breakpoint
-CREATE TYPE "public"."appointment_status" AS ENUM('Pending', 'Confirmed', 'Cancelled', 'Completed', 'Rescheduled', 'No Show');--> statement-breakpoint
+CREATE TYPE "public"."appointment_status" AS ENUM('Pending', 'Cancelled', 'Completed');--> statement-breakpoint
 CREATE TYPE "public"."appointment_type" AS ENUM('General', 'Follow_up', 'Emergency', 'Walk_in', 'Booked', 'Referral');--> statement-breakpoint
 CREATE TYPE "public"."company_status" AS ENUM('ACTIVE', 'INACTIVE', 'SUSPENDED');--> statement-breakpoint
 CREATE TYPE "public"."blood_group" AS ENUM('A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-');--> statement-breakpoint
