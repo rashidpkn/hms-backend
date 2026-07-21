@@ -22,6 +22,9 @@ export const usersRelations = relations(usersTable, ({ one, many }) => ({
     relationName: 'createdPatients',
   }),
   appointments: many(appointmentsTable),
+  createdAppointments: many(appointmentsTable, {
+    relationName: 'createdAppointments',
+  }),
 }));
 
 export const companiesRelations = relations(companiesTable, ({ many }) => ({
@@ -70,5 +73,10 @@ export const appointmentsRelations = relations(appointmentsTable, ({ one }) => (
   company: one(companiesTable, {
     fields: [appointmentsTable.companyId],
     references: [companiesTable.id],
+  }),
+  createdBy: one(usersTable, {
+    relationName: 'createdAppointments',
+    fields: [appointmentsTable.createdBy],
+    references: [usersTable.id],
   }),
 }));

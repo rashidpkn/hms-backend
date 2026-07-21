@@ -14,6 +14,7 @@ export const appointmentsTable = pgTable("appointments", (t) => ({
     patientId: t.integer("patient_id").references(() => patientsTable.id).notNull(),
     doctorId: t.integer("doctor_id").references(() => usersTable.id).notNull(),
     companyId: t.integer("company_id").references(() => companiesTable.id).notNull(),
+    createdBy: t.integer("created_by").references(() => usersTable.id).notNull(),
     date: t.date("appointment_date").notNull(),
     time: t.time("appointment_time").notNull(),
     medium: appointmentMediumEnum().notNull().default(AppointmentMedium.OFFLINE),
