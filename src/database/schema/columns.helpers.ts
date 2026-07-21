@@ -62,3 +62,23 @@ export enum PatientStatus {
   INACTIVE = 'INACTIVE',
   DECEASED = 'DECEASED',
 }
+
+export enum AppointmentType {
+  GENERAL = 'General',
+  FOLLOW_UP = 'Follow_up',
+  EMERGENCY = 'Emergency',
+}
+
+export enum AppointmentMedium {
+  ONLINE = 'Online',
+  OFFLINE = 'Offline',
+}
+
+export enum AppointmentStatus {
+  PENDING = 'Pending',
+  CONFIRMED = 'Confirmed',
+  CANCELLED = 'Cancelled',
+  COMPLETED = 'Completed',
+  RESCHEDULED = 'Rescheduled',
+  NO_SHOW = 'No Show',
+}

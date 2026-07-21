@@ -7,21 +7,8 @@ import {
 } from './columns.helpers';
 import { companiesTable } from './company.schema';
 
-export const UserRoleEnum = pgEnum('user_role', [
-  UserRoles.ADMIN,
-  UserRoles.MANAGER,
-  UserRoles.DOCTOR,
-  UserRoles.PHARMACIST,
-  UserRoles.RECEPTIONIST,
-  UserRoles.LAB_TECHNICIAN,
-  UserRoles.BILLING,
-]);
-export const UserStatusEnum = pgEnum('user_status', [
-  UserStatus.ACTIVE,
-  UserStatus.INACTIVE,
-  UserStatus.SUSPENDED,
-  UserStatus.LEAVE,
-]);
+export const UserRoleEnum = pgEnum('user_role', UserRoles);
+export const UserStatusEnum = pgEnum('user_status', UserStatus);
 
 export const usersTable = pgTable('users', (t) => ({
   id: t.serial('id').primaryKey(),

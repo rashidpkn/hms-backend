@@ -3,11 +3,7 @@ import { AddressType, CompanyStatus, timestamps } from './columns.helpers';
 import { sql } from 'drizzle-orm';
 import { decimal } from 'drizzle-orm/pg-core';
 
-export const CompanyStatusEnum = pgEnum('company_status', [
-  CompanyStatus.ACTIVE,
-  CompanyStatus.INACTIVE,
-  CompanyStatus.SUSPENDED,
-]);
+export const CompanyStatusEnum = pgEnum('company_status', CompanyStatus);
 
 export const companiesTable = pgTable('companies', (t) => ({
   id: t.serial('id').primaryKey(),
