@@ -3,7 +3,7 @@ import type { DB } from 'src/database/client';
 import { InjectDb } from 'src/database/database.provider';
 import { RegisterUserDto } from './dto/register.dto';
 import { companiesTable, profilesTable, usersTable } from 'src/database/schema';
-import { eq, or, SQL } from 'drizzle-orm';
+import { and, eq, or, SQL } from 'drizzle-orm';
 import * as bcrypt from 'bcrypt';
 import { AuthUser } from './auth/getUser.decorator';
 import { UserRoles } from 'src/database/schema/columns.helpers';
@@ -55,7 +55,9 @@ export class UsersService {
   async getAllUsers(user: AuthUser) {
     let where: SQL<unknown> | undefined
     if (user.role === UserRoles.MANAGER) {
-      where = eq(usersTable.companyId, user.companyId)
+      where = and(eq(usersTable.companyId, user.companyId), eq(usersTable.isDeleted, false))
+    } else {
+      where = eq(usersTable.isDeleted, false)
     }
     const data = await this.db.query.usersTable.findMany({
       where,
@@ -69,7 +71,7 @@ export class UsersService {
 
   async getUserById(id: number) {
     const data = await this.db.query.usersTable.findFirst({
-      where: eq(usersTable.id, id),
+      where: and(eq(usersTable.id, id), eq(usersTable.isDeleted, false)),
       with: {
         company: true,
         profile: true,
