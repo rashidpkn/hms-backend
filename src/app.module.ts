@@ -8,6 +8,7 @@ import { CompaniesModule } from './companies/companies.module';
 import { UsersModule } from './users/users.module';
 import { PatientsModule } from './patients/patients.module';
 import { JwtModule } from '@nestjs/jwt';
+import { AppointmentsModule } from './appointments/appointments.module';
 
 @Module({
   imports: [
@@ -19,6 +20,7 @@ import { JwtModule } from '@nestjs/jwt';
     UsersModule,
     PatientsModule,
     JwtModule.register({ global: true }),
+    AppointmentsModule,
   ],
   controllers: [AppController],
   providers: [AppService],

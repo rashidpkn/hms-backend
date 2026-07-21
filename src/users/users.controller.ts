@@ -13,13 +13,12 @@ import { RolesGuard } from './auth/roles.guard';
 import { AuthGuard } from './auth/auth.guard';
 import { UserRoles } from 'src/database/schema/columns.helpers';
 import { Roles } from './auth/roles.decorator';
-
+@UseGuards(AuthGuard, RolesGuard)
 @Controller('users')
 export class UsersController {
-  constructor(private readonly usersService: UsersService) {}
+  constructor(private readonly usersService: UsersService) { }
 
   //register user
-  @UseGuards(AuthGuard, RolesGuard)
   @Roles(UserRoles.ADMIN, UserRoles.MANAGER)
   @Post()
   registerUser(@Body() body: RegisterUserDto) {
@@ -27,7 +26,6 @@ export class UsersController {
   }
 
   //get all users
-  @UseGuards(AuthGuard, RolesGuard)
   @Roles(UserRoles.ADMIN, UserRoles.MANAGER)
   @Get()
   getAllUsers() {
@@ -35,7 +33,6 @@ export class UsersController {
   }
 
   //get user by id
-  @UseGuards(AuthGuard, RolesGuard)
   @Roles(UserRoles.ADMIN, UserRoles.MANAGER)
   @Get(':id')
   getUserById(@Param('id') id: number) {
@@ -43,7 +40,6 @@ export class UsersController {
   }
 
   //update user by id
-  @UseGuards(AuthGuard, RolesGuard)
   @Roles(UserRoles.ADMIN, UserRoles.MANAGER)
   @Put(':id')
   updateUserById() {
@@ -51,7 +47,6 @@ export class UsersController {
   }
 
   //delete user by id
-  @UseGuards(AuthGuard, RolesGuard)
   @Roles(UserRoles.ADMIN, UserRoles.MANAGER)
   @Post(':id')
   deleteUserById() {
