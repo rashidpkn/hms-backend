@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { CreateAppointmentDto } from './dto/create-appointment.dto';
 import { type DB } from 'src/database/client';
 import { InjectDb } from 'src/database/database.provider';
@@ -83,8 +83,11 @@ export class AppointmentsService {
           eq(appointmentsTable.isDeleted, false)
         ),
       );
+    if (data.length === 0) {
+      throw new BadRequestException('Appointment not found');
+    }
     return {
-      data,
+      data: data[0],
       message: 'Appointment fetched successfully',
     };
   }
@@ -101,8 +104,11 @@ export class AppointmentsService {
         ),
       )
       .returning();
+    if (data.length === 0) {
+      throw new BadRequestException('Appointment not found');
+    }
     return {
-      data,
+      data: data[0],
       message: 'Appointment rescheduled successfully',
     };
   }
@@ -120,14 +126,17 @@ export class AppointmentsService {
         ),
       )
       .returning();
+    if (data.length === 0) {
+      throw new BadRequestException('Appointment not found or status is not pending');
+    }
     return {
-      data,
+      data: data[0],
       message: 'Appointment status updated successfully',
     };
   }
 
-  deleteAppointment(id: number, companyId: number) {
-    const data = this.db
+  async deleteAppointment(id: number, companyId: number) {
+    const data = await this.db
       .update(appointmentsTable)
       .set({ isDeleted: true, deletedAt: new Date() })
       .where(
@@ -138,8 +147,11 @@ export class AppointmentsService {
         ),
       )
       .returning();
+    if (data.length === 0) {
+      throw new BadRequestException('Appointment not found');
+    }
     return {
-      data,
+      data: data[0],
       message: 'Appointment deleted successfully',
     };
   }

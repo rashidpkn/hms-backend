@@ -5,6 +5,7 @@ import { CreateAppointmentDto } from './dto/create-appointment.dto';
 import { type AuthUser, GetUser } from 'src/users/auth/getUser.decorator';
 import { RescheduleAppointmentDto } from './dto/reschedule-appointment.dto';
 import { AppointmentStatus } from 'src/database/schema/columns.helpers';
+import { ChangeStatusDto } from './dto/change-status.dto';
 
 @UseGuards(AuthGuard)
 @Controller('appointments')
@@ -47,7 +48,7 @@ export class AppointmentsController {
   }
 
   @Patch("status/:id")
-  async updateAppointmentStatus(@Param("id") id: number, @Body() body: { status: AppointmentStatus }, @GetUser() user: AuthUser) {
+  async updateAppointmentStatus(@Param("id") id: number, @Body() body: ChangeStatusDto, @GetUser() user: AuthUser) {
     return this.appointmentsService.updateAppointmentStatus(id, body.status, user.companyId);
   }
 
