@@ -2,7 +2,7 @@ import { boolean, timestamp } from 'drizzle-orm/pg-core';
 
 export const timestamps = {
   createdAt: timestamp('created_at').defaultNow().notNull(),
-  updatedAt: timestamp('updated_at').defaultNow().notNull(),
+  updatedAt: timestamp('updated_at').defaultNow().notNull().$onUpdate(() => new Date()),
   deletedAt: timestamp('deleted_at'),
   isDeleted: boolean('is_deleted').default(false).notNull(),
 };
@@ -67,6 +67,9 @@ export enum AppointmentType {
   GENERAL = 'General',
   FOLLOW_UP = 'Follow_up',
   EMERGENCY = 'Emergency',
+  WALK_IN = 'Walk_in',
+  BOOKED = 'Booked',
+  REFERRAL = 'Referral',
 }
 
 export enum AppointmentMedium {

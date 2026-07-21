@@ -56,5 +56,6 @@ export const profilesTable = pgTable('profiles', (t) => ({
   department: t.text('department'),
   specialization: t.text('specialization'),
   qualifications: t.text('qualifications'),
+  yearsOfExperience: t.integer('years_of_experience'),
   ...timestamps,
 }));

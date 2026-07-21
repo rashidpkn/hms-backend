@@ -17,6 +17,7 @@ export const usersTable = pgTable('users', (t) => ({
   email: t.text('email').notNull().unique(),
   password: t.text('password').notNull(),
   lastLogin: t.timestamp('last_login'),
+  passwordChangedAt: t.timestamp('password_changed_at'),
   status: UserStatusEnum().default(UserStatus.ACTIVE).notNull(),
   role: UserRoleEnum().default(UserRoles.PHARMACIST).notNull(),
   companyId: t

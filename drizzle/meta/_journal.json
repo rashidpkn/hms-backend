@@ -57,6 +57,13 @@
       "when": 1784603282479,
       "tag": "0007_fine_thing",
       "breakpoints": true
+    },
+    {
+      "idx": 8,
+      "version": "7",
+      "when": 1784616839208,
+      "tag": "0008_odd_selene",
+      "breakpoints": true
     }
   ]
 }

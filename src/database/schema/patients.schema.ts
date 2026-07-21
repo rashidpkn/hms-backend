@@ -1,4 +1,4 @@
-import { pgTable } from 'drizzle-orm/pg-core';
+import { decimal, pgTable, pgEnum } from 'drizzle-orm/pg-core';
 import {
   AddressType,
   timestamps,
@@ -7,7 +7,6 @@ import {
   AllergySeverity,
   PatientStatus,
 } from './columns.helpers';
-import { pgEnum } from 'drizzle-orm/pg-core';
 import { usersTable } from './users.schema';
 import { companiesTable } from './company.schema';
 
@@ -60,5 +59,8 @@ export const patientsTable = pgTable('patients', (t) => ({
       onDelete: 'restrict',
     })
     .notNull(),
+    height: decimal('height', { precision: 5, scale: 2 }), // Height in centimeters
+    weight: decimal('weight', { precision: 5, scale: 2 }), // Weight in kilograms
+    
   ...timestamps,
 }));
