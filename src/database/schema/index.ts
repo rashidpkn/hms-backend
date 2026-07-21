@@ -4,3 +4,6 @@ export * from './users.schema';
 export * from './profiles.schema';
 export * from './patients.schema';
 export * from './appointments.schema';
+export * from './vitals.schema';
+export * from './prescriptions.schema';
+export * from './consultations.schema';

@@ -5,71 +5,8 @@
     {
       "idx": 0,
       "version": "7",
-      "when": 1784548298006,
-      "tag": "0000_perfect_sauron",
-      "breakpoints": true
-    },
-    {
-      "idx": 1,
-      "version": "7",
-      "when": 1784561837987,
-      "tag": "0001_nostalgic_the_executioner",
-      "breakpoints": true
-    },
-    {
-      "idx": 2,
-      "version": "7",
-      "when": 1784564276916,
-      "tag": "0002_bitter_justin_hammer",
-      "breakpoints": true
-    },
-    {
-      "idx": 3,
-      "version": "7",
-      "when": 1784567805082,
-      "tag": "0003_glossy_oracle",
-      "breakpoints": true
-    },
-    {
-      "idx": 4,
-      "version": "7",
-      "when": 1784570563507,
-      "tag": "0004_large_mojo",
-      "breakpoints": true
-    },
-    {
-      "idx": 5,
-      "version": "7",
-      "when": 1784603081395,
-      "tag": "0005_brave_nightcrawler",
-      "breakpoints": true
-    },
-    {
-      "idx": 6,
-      "version": "7",
-      "when": 1784603244015,
-      "tag": "0006_purple_kingpin",
-      "breakpoints": true
-    },
-    {
-      "idx": 7,
-      "version": "7",
-      "when": 1784603282479,
-      "tag": "0007_fine_thing",
-      "breakpoints": true
-    },
-    {
-      "idx": 8,
-      "version": "7",
-      "when": 1784616839208,
-      "tag": "0008_odd_selene",
-      "breakpoints": true
-    },
-    {
-      "idx": 9,
-      "version": "7",
-      "when": 1784630440232,
-      "tag": "0009_concerned_harpoon",
+      "when": 1784632850851,
+      "tag": "0000_broken_the_executioner",
       "breakpoints": true
     }
   ]

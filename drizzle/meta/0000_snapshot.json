@@ -1,9 +1,171 @@
 {
-  "id": "710cf363-4ecf-44ec-9cd8-f88aca8234d8",
+  "id": "4ca5bc98-1f8f-4324-89dd-42523097c500",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
   "tables": {
+    "public.appointments": {
+      "name": "appointments",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "patient_id": {
+          "name": "patient_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "doctor_id": {
+          "name": "doctor_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "company_id": {
+          "name": "company_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "created_by": {
+          "name": "created_by",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "appointment_date": {
+          "name": "appointment_date",
+          "type": "date",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "appointment_time": {
+          "name": "appointment_time",
+          "type": "time",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "medium": {
+          "name": "medium",
+          "type": "appointment_medium",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'Offline'"
+        },
+        "note": {
+          "name": "note",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "type": {
+          "name": "type",
+          "type": "appointment_type",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'General'"
+        },
+        "status": {
+          "name": "status",
+          "type": "appointment_status",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'Pending'"
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "deleted_at": {
+          "name": "deleted_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "is_deleted": {
+          "name": "is_deleted",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "default": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "appointments_patient_id_patients_id_fk": {
+          "name": "appointments_patient_id_patients_id_fk",
+          "tableFrom": "appointments",
+          "tableTo": "patients",
+          "columnsFrom": [
+            "patient_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "appointments_doctor_id_users_id_fk": {
+          "name": "appointments_doctor_id_users_id_fk",
+          "tableFrom": "appointments",
+          "tableTo": "users",
+          "columnsFrom": [
+            "doctor_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "appointments_company_id_companies_id_fk": {
+          "name": "appointments_company_id_companies_id_fk",
+          "tableFrom": "appointments",
+          "tableTo": "companies",
+          "columnsFrom": [
+            "company_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "appointments_created_by_users_id_fk": {
+          "name": "appointments_created_by_users_id_fk",
+          "tableFrom": "appointments",
+          "tableTo": "users",
+          "columnsFrom": [
+            "created_by"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
     "public.companies": {
       "name": "companies",
       "schema": "",
@@ -59,7 +221,6 @@
         "status": {
           "name": "status",
           "type": "company_status",
-          "typeSchema": "public",
           "primaryKey": false,
           "notNull": true,
           "default": "'ACTIVE'"
@@ -163,6 +324,237 @@
       "checkConstraints": {},
       "isRLSEnabled": false
     },
+    "public.consultations": {
+      "name": "consultations",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "patient_id": {
+          "name": "patient_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "doctor_id": {
+          "name": "doctor_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "company_id": {
+          "name": "company_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "appointment_id": {
+          "name": "appointment_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "prescription_id": {
+          "name": "prescription_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "vital_id": {
+          "name": "vital_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "chief_complaint": {
+          "name": "chief_complaint",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "examination": {
+          "name": "examination",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "present_history": {
+          "name": "present_history",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "past_history": {
+          "name": "past_history",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "diagnosis": {
+          "name": "diagnosis",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "treatment": {
+          "name": "treatment",
+          "type": "text[]",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "lab_orders": {
+          "name": "lab_orders",
+          "type": "text[]",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "notes": {
+          "name": "notes",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "deleted_at": {
+          "name": "deleted_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "is_deleted": {
+          "name": "is_deleted",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "default": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "consultations_patient_id_patients_id_fk": {
+          "name": "consultations_patient_id_patients_id_fk",
+          "tableFrom": "consultations",
+          "tableTo": "patients",
+          "columnsFrom": [
+            "patient_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "consultations_doctor_id_users_id_fk": {
+          "name": "consultations_doctor_id_users_id_fk",
+          "tableFrom": "consultations",
+          "tableTo": "users",
+          "columnsFrom": [
+            "doctor_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "consultations_company_id_companies_id_fk": {
+          "name": "consultations_company_id_companies_id_fk",
+          "tableFrom": "consultations",
+          "tableTo": "companies",
+          "columnsFrom": [
+            "company_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "consultations_appointment_id_appointments_id_fk": {
+          "name": "consultations_appointment_id_appointments_id_fk",
+          "tableFrom": "consultations",
+          "tableTo": "appointments",
+          "columnsFrom": [
+            "appointment_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "consultations_prescription_id_prescriptions_id_fk": {
+          "name": "consultations_prescription_id_prescriptions_id_fk",
+          "tableFrom": "consultations",
+          "tableTo": "prescriptions",
+          "columnsFrom": [
+            "prescription_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "consultations_vital_id_vitals_id_fk": {
+          "name": "consultations_vital_id_vitals_id_fk",
+          "tableFrom": "consultations",
+          "tableTo": "vitals",
+          "columnsFrom": [
+            "vital_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "consultations_appointment_id_unique": {
+          "name": "consultations_appointment_id_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "appointment_id"
+          ]
+        },
+        "consultations_prescription_id_unique": {
+          "name": "consultations_prescription_id_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "prescription_id"
+          ]
+        },
+        "consultations_vital_id_unique": {
+          "name": "consultations_vital_id_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "vital_id"
+          ]
+        }
+      },
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
     "public.patients": {
       "name": "patients",
       "schema": "",
@@ -187,7 +579,7 @@
         },
         "patient_code": {
           "name": "patient_code",
-          "type": "varchar(20)",
+          "type": "integer",
           "primaryKey": false,
           "notNull": true
         },
@@ -217,14 +609,13 @@
         },
         "date_of_birth": {
           "name": "date_of_birth",
-          "type": "date",
+          "type": "timestamp",
           "primaryKey": false,
           "notNull": false
         },
         "gender": {
           "name": "gender",
           "type": "gender",
-          "typeSchema": "public",
           "primaryKey": false,
           "notNull": true,
           "default": "'Unknown'"
@@ -232,7 +623,6 @@
         "blood_group": {
           "name": "blood_group",
           "type": "blood_group",
-          "typeSchema": "public",
           "primaryKey": false,
           "notNull": false
         },
@@ -263,10 +653,21 @@
         "status": {
           "name": "status",
           "type": "patient_status",
-          "typeSchema": "public",
           "primaryKey": false,
           "notNull": true,
           "default": "'ACTIVE'"
+        },
+        "created_by": {
+          "name": "created_by",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "company_id": {
+          "name": "company_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
         },
         "created_at": {
           "name": "created_at",
@@ -310,6 +711,32 @@
           ],
           "onDelete": "restrict",
           "onUpdate": "no action"
+        },
+        "patients_created_by_users_id_fk": {
+          "name": "patients_created_by_users_id_fk",
+          "tableFrom": "patients",
+          "tableTo": "users",
+          "columnsFrom": [
+            "created_by"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "restrict",
+          "onUpdate": "no action"
+        },
+        "patients_company_id_companies_id_fk": {
+          "name": "patients_company_id_companies_id_fk",
+          "tableFrom": "patients",
+          "tableTo": "companies",
+          "columnsFrom": [
+            "company_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "restrict",
+          "onUpdate": "no action"
         }
       },
       "compositePrimaryKeys": {},
@@ -322,6 +749,51 @@
           ]
         }
       },
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.prescriptions": {
+      "name": "prescriptions",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "patient_id": {
+          "name": "patient_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "items": {
+          "name": "items",
+          "type": "jsonb",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "prescriptions_patient_id_patients_id_fk": {
+          "name": "prescriptions_patient_id_patients_id_fk",
+          "tableFrom": "prescriptions",
+          "tableTo": "patients",
+          "columnsFrom": [
+            "patient_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
       "policies": {},
       "checkConstraints": {},
       "isRLSEnabled": false
@@ -430,6 +902,12 @@
           "primaryKey": false,
           "notNull": false
         },
+        "years_of_experience": {
+          "name": "years_of_experience",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
         "created_at": {
           "name": "created_at",
           "type": "timestamp",
@@ -528,10 +1006,15 @@
           "primaryKey": false,
           "notNull": false
         },
+        "password_changed_at": {
+          "name": "password_changed_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false
+        },
         "status": {
           "name": "status",
           "type": "user_status",
-          "typeSchema": "public",
           "primaryKey": false,
           "notNull": true,
           "default": "'ACTIVE'"
@@ -539,7 +1022,6 @@
         "role": {
           "name": "role",
           "type": "user_role",
-          "typeSchema": "public",
           "primaryKey": false,
           "notNull": true,
           "default": "'PHARMACIST'"
@@ -549,6 +1031,12 @@
           "type": "integer",
           "primaryKey": false,
           "notNull": true
+        },
+        "refresh_token": {
+          "name": "refresh_token",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
         },
         "created_at": {
           "name": "created_at",
@@ -607,9 +1095,155 @@
       "policies": {},
       "checkConstraints": {},
       "isRLSEnabled": false
+    },
+    "public.vitals": {
+      "name": "vitals",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "patient_id": {
+          "name": "patient_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "height": {
+          "name": "height",
+          "type": "numeric(5, 2)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "weight": {
+          "name": "weight",
+          "type": "numeric(5, 2)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "temperature": {
+          "name": "temperature",
+          "type": "real",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "temperature_unit": {
+          "name": "temperature_unit",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "pulse": {
+          "name": "pulse",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "spo2": {
+          "name": "spo2",
+          "type": "real",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "respiratory_rate": {
+          "name": "respiratory_rate",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "blood_pressure": {
+          "name": "blood_pressure",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "deleted_at": {
+          "name": "deleted_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "is_deleted": {
+          "name": "is_deleted",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "default": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "vitals_patient_id_patients_id_fk": {
+          "name": "vitals_patient_id_patients_id_fk",
+          "tableFrom": "vitals",
+          "tableTo": "patients",
+          "columnsFrom": [
+            "patient_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
     }
   },
   "enums": {
+    "public.appointment_medium": {
+      "name": "appointment_medium",
+      "schema": "public",
+      "values": [
+        "Online",
+        "Offline"
+      ]
+    },
+    "public.appointment_status": {
+      "name": "appointment_status",
+      "schema": "public",
+      "values": [
+        "Pending",
+        "Confirmed",
+        "Cancelled",
+        "Completed",
+        "Rescheduled",
+        "No Show"
+      ]
+    },
+    "public.appointment_type": {
+      "name": "appointment_type",
+      "schema": "public",
+      "values": [
+        "General",
+        "Follow_up",
+        "Emergency",
+        "Walk_in",
+        "Booked",
+        "Referral"
+      ]
+    },
     "public.company_status": {
       "name": "company_status",
       "schema": "public",

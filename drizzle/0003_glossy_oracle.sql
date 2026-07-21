@@ -1,2 +1,0 @@
-ALTER TABLE "patients" ADD COLUMN "company_id" integer NOT NULL;--> statement-breakpoint
-ALTER TABLE "patients" ADD CONSTRAINT "patients_company_id_companies_id_fk" FOREIGN KEY ("company_id") REFERENCES "public"."companies"("id") ON DELETE restrict ON UPDATE no action;
