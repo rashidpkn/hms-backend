@@ -59,8 +59,7 @@ export const patientsTable = pgTable('patients', (t) => ({
       onDelete: 'restrict',
     })
     .notNull(),
-    height: decimal('height', { precision: 5, scale: 2 }), // Height in centimeters
-    weight: decimal('weight', { precision: 5, scale: 2 }), // Weight in kilograms
+    
     
   ...timestamps,
 }));

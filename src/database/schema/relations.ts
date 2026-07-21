@@ -4,6 +4,9 @@ import { companiesTable } from './company.schema';
 import { profilesTable } from './profiles.schema';
 import { patientsTable } from './patients.schema';
 import { appointmentsTable } from './appointments.schema';
+import { consultationsTable } from './consultations.schema';
+import { prescriptionsTable } from './prescriptions.schema';
+import { vitalsTable } from './vitals.schema';
 
 export const usersRelations = relations(usersTable, ({ one, many }) => ({
   company: one(companiesTable, {
@@ -25,12 +28,15 @@ export const usersRelations = relations(usersTable, ({ one, many }) => ({
   createdAppointments: many(appointmentsTable, {
     relationName: 'createdAppointments',
   }),
+  consultations: many(consultationsTable),
+
 }));
 
 export const companiesRelations = relations(companiesTable, ({ many }) => ({
   users: many(usersTable),
   patients: many(patientsTable),
   appointments: many(appointmentsTable),
+  consultations: many(consultationsTable),
 }));
 
 export const profilesRelations = relations(profilesTable, ({ one }) => ({
@@ -58,6 +64,9 @@ createdBy: one(usersTable, {
   }),
 
   appointments: many(appointmentsTable),
+  consultations: many(consultationsTable),
+  prescriptions: many(prescriptionsTable),
+  vitals: many(vitalsTable)
 }));
 
 
@@ -79,4 +88,58 @@ export const appointmentsRelations = relations(appointmentsTable, ({ one }) => (
     fields: [appointmentsTable.createdBy],
     references: [usersTable.id],
   }),
+  consultation: one(consultationsTable, {
+    fields: [appointmentsTable.id],
+    references: [consultationsTable.appointmentId],
+  })
 }));
+
+
+export const consultationsRelations = relations(consultationsTable, ({ one }) => ({
+  patient: one(patientsTable, {
+    fields: [consultationsTable.patientId],
+    references: [patientsTable.id],
+  }),
+  doctor: one(usersTable, {
+    fields: [consultationsTable.doctorId],
+    references: [usersTable.id],
+  }),
+  company: one(companiesTable, {
+    fields: [consultationsTable.companyId],
+    references: [companiesTable.id],
+  }),
+  appointment: one(appointmentsTable, {
+    fields: [consultationsTable.appointmentId],
+    references: [appointmentsTable.id],
+  }),
+  prescriptions: one(prescriptionsTable,{
+    fields: [consultationsTable.prescriptionId],
+    references: [prescriptionsTable.id],
+  }),
+  vitals: one(vitalsTable,{
+    fields: [consultationsTable.vitalId],
+    references: [vitalsTable.id],
+  })
+}))
+
+export const prescriptionsRelations = relations(prescriptionsTable, ({ one }) => ({
+  patient: one(patientsTable, {
+    fields: [prescriptionsTable.patientId],
+    references: [patientsTable.id],
+  }),
+  consultation: one(consultationsTable, {
+    fields: [prescriptionsTable.id],
+    references: [consultationsTable.prescriptionId],
+  })
+}));
+
+export const vitalsRelations = relations(vitalsTable, ({ one }) => ({
+  patient: one(patientsTable, {
+    fields: [vitalsTable.patientId],
+    references: [patientsTable.id],
+  }),
+  consultation: one(consultationsTable, {
+    fields: [vitalsTable.id],
+    references: [consultationsTable.vitalId],
+  })
+}))
