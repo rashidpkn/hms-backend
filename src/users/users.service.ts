@@ -3,12 +3,14 @@ import type { DB } from 'src/database/client';
 import { InjectDb } from 'src/database/database.provider';
 import { RegisterUserDto } from './dto/register.dto';
 import { companiesTable, profilesTable, usersTable } from 'src/database/schema';
-import { eq, or } from 'drizzle-orm';
+import { eq, or, SQL } from 'drizzle-orm';
 import * as bcrypt from 'bcrypt';
+import { AuthUser } from './auth/getUser.decorator';
+import { UserRoles } from 'src/database/schema/columns.helpers';
 
 @Injectable()
 export class UsersService {
-  constructor(@InjectDb() private readonly db: DB) {}
+  constructor(@InjectDb() private readonly db: DB) { }
 
   async registerUser(body: RegisterUserDto) {
     const existingUser = await this.db.query.usersTable.findFirst({
@@ -50,9 +52,14 @@ export class UsersService {
     };
   }
 
-  async getAllUsers() {
+  async getAllUsers(user: AuthUser) {
+    let where: SQL<unknown> | undefined
+    if (user.role === UserRoles.MANAGER) {
+      where = eq(usersTable.companyId, user.companyId)
+    }
     const data = await this.db.query.usersTable.findMany({
-      with: { company: true },
+      where,
+      with: { company: true }
     });
     return {
       message: 'Users fetched successfully',

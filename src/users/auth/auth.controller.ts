@@ -10,11 +10,17 @@ import { GetUser, type AuthUser } from './getUser.decorator';
 
 @Controller('auth')
 export class AuthController {
-  constructor(private readonly authService: AuthService) {}
+  constructor(private readonly authService: AuthService) { }
 
   @Post('login')
   async login(@Body() body: LoginDto) {
     return this.authService.login(body);
+  }
+
+  @UseGuards(AuthGuard)
+  @Post("logout")
+  async logout(@GetUser() user: AuthUser) {
+    return this.authService.logout(user.id)
   }
 
   @Post('refresh_token')

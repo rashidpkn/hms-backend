@@ -3,6 +3,7 @@ import {
   Controller,
   Get,
   Param,
+  ParseIntPipe,
   Post,
   Put,
   UseGuards,
@@ -30,14 +31,14 @@ export class UsersController {
   //get all users
   @Roles(UserRoles.ADMIN, UserRoles.MANAGER)
   @Get()
-  getAllUsers() {
-    return this.usersService.getAllUsers();
+  getAllUsers(@GetUser() user: AuthUser) {
+    return this.usersService.getAllUsers(user);
   }
 
   //get user by id
   @Roles(UserRoles.ADMIN, UserRoles.MANAGER)
   @Get(':id')
-  getUserById(@Param('id') id: number) {
+  getUserById(@Param('id', ParseIntPipe) id: number) {
     return this.usersService.getUserById(id);
   }
 

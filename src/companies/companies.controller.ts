@@ -4,6 +4,7 @@ import {
   Delete,
   Get,
   Param,
+  ParseIntPipe,
   Post,
   Put,
   UseGuards,
@@ -39,14 +40,14 @@ export class CompaniesController {
 
   @Get(':id')
   //get single company
-  async getSingleCompany(@Param('id') id: number) {
+  async getSingleCompany(@Param('id', ParseIntPipe) id: number) {
     return this.companiesService.findOne(id);
   }
 
   @Put(':id')
   //update company
   async updateCompany(
-    @Param('id') id: number,
+    @Param('id', ParseIntPipe) id: number,
     @Body() updateCompanyDto: UpdateCompanyDto,
   ) {
     return this.companiesService.update(id, updateCompanyDto);
@@ -54,7 +55,7 @@ export class CompaniesController {
 
   @Delete(':id')
   //delete company
-  async deleteCompany(@Param('id') id: number) {
+  async deleteCompany(@Param('id', ParseIntPipe) id: number) {
     return this.companiesService.remove(id);
   }
 }
