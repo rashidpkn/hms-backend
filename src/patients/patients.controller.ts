@@ -2,7 +2,10 @@ import {
   Body,
   Controller,
   Delete,
+  ForbiddenException,
   Get,
+  Param,
+  ParseIntPipe,
   Post,
   Put,
   UseGuards,
@@ -15,7 +18,7 @@ import { type AuthUser, GetUser } from 'src/users/auth/getUser.decorator';
 @UseGuards(AuthGuard)
 @Controller('patients')
 export class PatientsController {
-  constructor(private readonly patientsService: PatientsService) {}
+  constructor(private readonly patientsService: PatientsService) { }
 
   //register patient
 
@@ -29,16 +32,24 @@ export class PatientsController {
     return await this.patientsService.create(createPatientDto);
   }
 
-  // get all patients
-  @Get()
-  async getAll() {
-    // return this.patientsService.findAll();
+
+  @Get("company/:id")
+  async getPatientsByCompany(@Param("id", ParseIntPipe) companyId: number, @GetUser() user: AuthUser) {
+    if (companyId != user.companyId) {
+      throw new ForbiddenException("You are not authorized to access this company's patients");
+    }
+    return this.patientsService.getPatientsByCompany(companyId);
+  }
+
+  @Get("doctor/:id")
+  async getPatientsByDoctor(@Param("id", ParseIntPipe) doctorId: number, @GetUser() user: AuthUser) {
+    return this.patientsService.getPatientsByDoctor(doctorId, user.companyId);
   }
 
   // get a patient by id
   @Get(':id')
-  async getSingle() {
-    // return this.patientsService.findOne();
+  async getSingle(@Param("id", ParseIntPipe) id: number, @GetUser() user: AuthUser) {
+    return this.patientsService.getSingle(id, user.companyId);
   }
 
   // update a patient
