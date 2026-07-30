@@ -15,6 +15,9 @@ import { AuthGuard } from './auth/auth.guard';
 import { UserRoles } from 'src/database/schema/columns.helpers';
 import { Roles } from './auth/roles.decorator';
 import { type AuthUser, GetUser } from './auth/getUser.decorator';
+import { ApiBearerAuth } from '@nestjs/swagger';
+
+@ApiBearerAuth()
 @UseGuards(AuthGuard, RolesGuard)
 @Controller('users')
 export class UsersController {

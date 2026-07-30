@@ -18,6 +18,9 @@ import { RolesGuard } from 'src/users/auth/roles.guard';
 import { Roles } from 'src/users/auth/roles.decorator';
 import { UserRoles } from 'src/database/schema/columns.helpers';
 
+import { ApiBearerAuth } from '@nestjs/swagger';
+
+@ApiBearerAuth()
 @UseGuards(AuthGuard, RolesGuard)
 @Roles(UserRoles.ADMIN)
 @Controller('companies')

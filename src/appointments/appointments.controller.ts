@@ -7,6 +7,9 @@ import { RescheduleAppointmentDto } from './dto/reschedule-appointment.dto';
 import { AppointmentStatus } from 'src/database/schema/columns.helpers';
 import { ChangeStatusDto } from './dto/change-status.dto';
 
+import { ApiBearerAuth } from '@nestjs/swagger';
+
+@ApiBearerAuth()
 @UseGuards(AuthGuard)
 @Controller('appointments')
 export class AppointmentsController {

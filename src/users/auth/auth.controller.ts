@@ -7,6 +7,7 @@ import { RolesGuard } from './roles.guard';
 import { Roles } from './roles.decorator';
 import { UserRoles } from 'src/database/schema/columns.helpers';
 import { GetUser, type AuthUser } from './getUser.decorator';
+import { ApiBearerAuth } from '@nestjs/swagger';
 
 @Controller('auth')
 export class AuthController {
@@ -17,6 +18,7 @@ export class AuthController {
     return this.authService.login(body);
   }
 
+  @ApiBearerAuth()
   @UseGuards(AuthGuard)
   @Post("logout")
   async logout(@GetUser() user: AuthUser) {
@@ -28,6 +30,7 @@ export class AuthController {
     return this.authService.refreshToken(body);
   }
 
+  @ApiBearerAuth()
   @UseGuards(AuthGuard)
   @Get('verify')
   verifyToken(@GetUser() user: AuthUser) {

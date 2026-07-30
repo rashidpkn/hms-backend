@@ -1,3 +1,4 @@
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { Transform } from 'class-transformer';
 import {
   type AddressType,
@@ -25,11 +26,13 @@ import {
 } from 'class-validator';
 
 export class RegisterPatientDto {
+  @ApiProperty({ example: 'Alice' })
   @IsString()
   @IsNotEmpty()
   @Transform(({ value }: { value: string }) => value.trim())
   firstName!: string;
 
+  @ApiProperty({ example: 'Smith' })
   @IsString()
   @IsNotEmpty()
   @Transform(({ value }: { value: string }) => value.trim())
@@ -38,35 +41,43 @@ export class RegisterPatientDto {
   @IsEmpty()
   patientCode!: number;
 
+  @ApiPropertyOptional({ example: 'alice@example.com' })
   @IsEmail()
   @IsOptional()
   @Transform(({ value }: { value: string }) => value.toLowerCase().trim())
   email?: string;
 
+  @ApiPropertyOptional({ example: '+1234567890' })
   @IsPhoneNumber()
   @IsOptional()
   @Transform(({ value }: { value: string }) => value.trim())
   phoneNumber?: string;
 
+  @ApiPropertyOptional()
   @IsOptional()
   address?: AddressType;
 
+  @ApiPropertyOptional({ example: 1 })
   @IsPositive()
   @IsInt()
   @IsOptional()
   primaryDoctorId?: number;
 
+  @ApiPropertyOptional({ example: '1990-05-15' })
   @IsDate()
   @IsOptional()
   dateOfBirth?: Date;
 
+  @ApiPropertyOptional({ enum: Gender, example: Gender.FEMALE })
   @IsEnum(Gender)
   gender?: Gender;
 
+  @ApiPropertyOptional({ enum: BloodGroup, example: BloodGroup.A_POSITIVE })
   @IsEnum(BloodGroup)
   @IsOptional()
   bloodGroup?: BloodGroup;
 
+  @ApiPropertyOptional()
   @IsArray()
   @IsOptional()
   allergies?: {
@@ -75,6 +86,7 @@ export class RegisterPatientDto {
     severity: AllergySeverity;
   }[];
 
+  @ApiPropertyOptional()
   @IsOptional()
   emergencyContact?: {
     name: string;
@@ -82,6 +94,7 @@ export class RegisterPatientDto {
     phoneNumber: string;
   };
 
+  @ApiPropertyOptional()
   @IsOptional()
   insuranceDetails?: {
     providerName: string;
@@ -89,6 +102,7 @@ export class RegisterPatientDto {
     coverageDetails?: string;
   };
 
+  @ApiPropertyOptional({ example: 'Patient notes' })
   @IsString()
   @IsOptional()
   @Transform(({ value }: { value: string }) => value.trim())
