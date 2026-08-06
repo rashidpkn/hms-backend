@@ -12,6 +12,8 @@ import { AppointmentsModule } from './appointments/appointments.module';
 import { TerminusModule } from '@nestjs/terminus';
 import { ThrottlerModule } from '@nestjs/throttler';
 import { LoggerModule } from 'nestjs-pino';
+import { ConsultationsModule } from './consultations/consultations.module';
+import { PharmacyModule } from './pharmacy/pharmacy.module';
 @Module({
   imports: [
     TerminusModule,
@@ -61,6 +63,8 @@ import { LoggerModule } from 'nestjs-pino';
     PatientsModule,
     JwtModule.register({ global: true }),
     AppointmentsModule,
+    ConsultationsModule,
+    PharmacyModule,
   ],
   controllers: [AppController],
   providers: [AppService],

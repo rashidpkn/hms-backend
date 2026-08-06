@@ -16,13 +16,13 @@ export const consultationsTable = pgTable("consultations", (t)=>({
     prescriptionId: t.integer("prescription_id").references(() => prescriptionsTable.id).unique(),
     vitalId: t.integer("vital_id").references(() => vitalsTable.id).unique(),
     chiefComplaint: t.text("chief_complaint"),
+    painScore: t.integer("pain_score"),
     examination: t.text("examination"),
     presentHistory: t.text("present_history"),
     pastHistory: t.text("past_history"),
     diagnosis: t.text("diagnosis"),
     treatment: t.text("treatment").array(),
-    labOrders: t.text("lab_orders").array(),
-    
+    labOrders: t.text("lab_orders").array(),    
     notes: t.text("notes"),
     ...timestamps
 }))
