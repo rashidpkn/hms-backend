@@ -1,10 +1,5 @@
-import { pgTable, pgEnum, decimal } from 'drizzle-orm/pg-core';
-import {
-  AddressType,
-  UserRoles,
-  UserStatus,
-  timestamps,
-} from './columns.helpers';
+import { pgTable, pgEnum } from 'drizzle-orm/pg-core';
+import { UserRoles, UserStatus, timestamps } from './columns.helpers';
 import { companiesTable } from './company.schema';
 
 export const UserRoleEnum = pgEnum('user_role', UserRoles);

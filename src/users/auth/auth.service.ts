@@ -20,7 +20,7 @@ export class AuthService {
   constructor(
     @InjectDb() private readonly db: DB,
     private jwtService: JwtService,
-  ) { }
+  ) {}
 
   async login(body: LoginDto): Promise<CommonResponse<{}>> {
     const user = await this.db.query.usersTable.findFirst({
@@ -119,16 +119,19 @@ export class AuthService {
         },
         message: 'Refresh token successful',
       };
-    } catch (e) {
+    } catch {
       throw new UnauthorizedException('Invalid refresh token');
     }
   }
 
   async logout(id: number) {
-    const data = await this.db.update(usersTable).set({ refreshToken: null }).where(eq(usersTable.id, id))
+    await this.db
+      .update(usersTable)
+      .set({ refreshToken: null })
+      .where(eq(usersTable.id, id));
     return {
       data: null,
-      message: "Logout Successfully"
-    }
+      message: 'Logout Successfully',
+    };
   }
 }

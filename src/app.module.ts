@@ -69,4 +69,4 @@ import { PharmacyModule } from './pharmacy/pharmacy.module';
   controllers: [AppController],
   providers: [AppService],
 })
-export class AppModule { }
+export class AppModule {}

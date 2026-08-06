@@ -21,13 +21,13 @@ import { ApiBearerAuth } from '@nestjs/swagger';
 @UseGuards(AuthGuard, RolesGuard)
 @Controller('users')
 export class UsersController {
-  constructor(private readonly usersService: UsersService) { }
+  constructor(private readonly usersService: UsersService) {}
 
   //register user
   @Roles(UserRoles.ADMIN, UserRoles.MANAGER)
   @Post()
   registerUser(@Body() body: RegisterUserDto, @GetUser() user: AuthUser) {
-    body.companyId = user.companyId
+    body.companyId = user.companyId;
     return this.usersService.registerUser(body);
   }
 

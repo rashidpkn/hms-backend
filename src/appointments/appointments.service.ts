@@ -9,7 +9,7 @@ import { AppointmentStatus } from 'src/database/schema/columns.helpers';
 
 @Injectable()
 export class AppointmentsService {
-  constructor(@InjectDb() private readonly db: DB) { }
+  constructor(@InjectDb() private readonly db: DB) {}
 
   async createAppointment(createAppointmentDto: CreateAppointmentDto) {
     const data = await this.db
@@ -30,7 +30,7 @@ export class AppointmentsService {
         and(
           eq(appointmentsTable.doctorId, doctorId),
           eq(appointmentsTable.companyId, companyId),
-          eq(appointmentsTable.isDeleted, false)
+          eq(appointmentsTable.isDeleted, false),
         ),
       );
     return {
@@ -47,7 +47,7 @@ export class AppointmentsService {
         and(
           eq(appointmentsTable.patientId, patientId),
           eq(appointmentsTable.companyId, companyId),
-          eq(appointmentsTable.isDeleted, false)
+          eq(appointmentsTable.isDeleted, false),
         ),
       );
     return {
@@ -63,8 +63,8 @@ export class AppointmentsService {
       .where(
         and(
           eq(appointmentsTable.companyId, companyId),
-          eq(appointmentsTable.isDeleted, false)
-        )
+          eq(appointmentsTable.isDeleted, false),
+        ),
       );
     return {
       data,
@@ -80,7 +80,7 @@ export class AppointmentsService {
         and(
           eq(appointmentsTable.id, id),
           eq(appointmentsTable.companyId, companyId),
-          eq(appointmentsTable.isDeleted, false)
+          eq(appointmentsTable.isDeleted, false),
         ),
       );
     if (data.length === 0) {
@@ -92,7 +92,11 @@ export class AppointmentsService {
     };
   }
 
-  async rescheduleAppointment(id: number, rescheduleAppointmentDto: RescheduleAppointmentDto, companyId: number) {
+  async rescheduleAppointment(
+    id: number,
+    rescheduleAppointmentDto: RescheduleAppointmentDto,
+    companyId: number,
+  ) {
     const data = await this.db
       .update(appointmentsTable)
       .set(rescheduleAppointmentDto)
@@ -100,7 +104,7 @@ export class AppointmentsService {
         and(
           eq(appointmentsTable.id, id),
           eq(appointmentsTable.companyId, companyId),
-          eq(appointmentsTable.isDeleted, false)
+          eq(appointmentsTable.isDeleted, false),
         ),
       )
       .returning();
@@ -113,7 +117,11 @@ export class AppointmentsService {
     };
   }
 
-  async updateAppointmentStatus(id: number, status: AppointmentStatus, companyId: number) {
+  async updateAppointmentStatus(
+    id: number,
+    status: AppointmentStatus,
+    companyId: number,
+  ) {
     const data = await this.db
       .update(appointmentsTable)
       .set({ status })
@@ -122,12 +130,14 @@ export class AppointmentsService {
           eq(appointmentsTable.id, id),
           eq(appointmentsTable.companyId, companyId),
           eq(appointmentsTable.isDeleted, false),
-          eq(appointmentsTable.status, AppointmentStatus.PENDING)
+          eq(appointmentsTable.status, AppointmentStatus.PENDING),
         ),
       )
       .returning();
     if (data.length === 0) {
-      throw new BadRequestException('Appointment not found or status is not pending');
+      throw new BadRequestException(
+        'Appointment not found or status is not pending',
+      );
     }
     return {
       data: data[0],
@@ -143,7 +153,7 @@ export class AppointmentsService {
         and(
           eq(appointmentsTable.id, id),
           eq(appointmentsTable.companyId, companyId),
-          eq(appointmentsTable.isDeleted, false)
+          eq(appointmentsTable.isDeleted, false),
         ),
       )
       .returning();

@@ -29,7 +29,6 @@ export const usersRelations = relations(usersTable, ({ one, many }) => ({
     relationName: 'createdAppointments',
   }),
   consultations: many(consultationsTable),
-
 }));
 
 export const companiesRelations = relations(companiesTable, ({ many }) => ({
@@ -46,18 +45,18 @@ export const profilesRelations = relations(profilesTable, ({ one }) => ({
   }),
 }));
 
-export const patientsRelations = relations(patientsTable, ({ one,many }) => ({
- doctor: one(usersTable, {
-  relationName: 'doctorPatients',
-  fields: [patientsTable.primaryDoctorId],
-  references: [usersTable.id],
-}),
+export const patientsRelations = relations(patientsTable, ({ one, many }) => ({
+  doctor: one(usersTable, {
+    relationName: 'doctorPatients',
+    fields: [patientsTable.primaryDoctorId],
+    references: [usersTable.id],
+  }),
 
-createdBy: one(usersTable, {
-  relationName: 'createdPatients',
-  fields: [patientsTable.createdBy],
-  references: [usersTable.id],
-}),
+  createdBy: one(usersTable, {
+    relationName: 'createdPatients',
+    fields: [patientsTable.createdBy],
+    references: [usersTable.id],
+  }),
   company: one(companiesTable, {
     fields: [patientsTable.companyId],
     references: [companiesTable.id],
@@ -66,72 +65,79 @@ createdBy: one(usersTable, {
   appointments: many(appointmentsTable),
   consultations: many(consultationsTable),
   prescriptions: many(prescriptionsTable),
-  vitals: many(vitalsTable)
+  vitals: many(vitalsTable),
 }));
 
+export const appointmentsRelations = relations(
+  appointmentsTable,
+  ({ one }) => ({
+    patient: one(patientsTable, {
+      fields: [appointmentsTable.patientId],
+      references: [patientsTable.id],
+    }),
+    doctor: one(usersTable, {
+      fields: [appointmentsTable.doctorId],
+      references: [usersTable.id],
+    }),
+    company: one(companiesTable, {
+      fields: [appointmentsTable.companyId],
+      references: [companiesTable.id],
+    }),
+    createdBy: one(usersTable, {
+      relationName: 'createdAppointments',
+      fields: [appointmentsTable.createdBy],
+      references: [usersTable.id],
+    }),
+    consultation: one(consultationsTable, {
+      fields: [appointmentsTable.id],
+      references: [consultationsTable.appointmentId],
+    }),
+  }),
+);
 
-export const appointmentsRelations = relations(appointmentsTable, ({ one }) => ({
-  patient: one(patientsTable, {
-    fields: [appointmentsTable.patientId],
-    references: [patientsTable.id],
+export const consultationsRelations = relations(
+  consultationsTable,
+  ({ one }) => ({
+    patient: one(patientsTable, {
+      fields: [consultationsTable.patientId],
+      references: [patientsTable.id],
+    }),
+    doctor: one(usersTable, {
+      fields: [consultationsTable.doctorId],
+      references: [usersTable.id],
+    }),
+    company: one(companiesTable, {
+      fields: [consultationsTable.companyId],
+      references: [companiesTable.id],
+    }),
+    appointment: one(appointmentsTable, {
+      fields: [consultationsTable.appointmentId],
+      references: [appointmentsTable.id],
+    }),
+    prescriptions: one(prescriptionsTable, {
+      fields: [consultationsTable.prescriptionId],
+      references: [prescriptionsTable.id],
+    }),
+    vitals: one(vitalsTable, {
+      fields: [consultationsTable.vitalId],
+      references: [vitalsTable.id],
+    }),
   }),
-  doctor: one(usersTable, {
-    fields: [appointmentsTable.doctorId],
-    references: [usersTable.id],
-  }),
-  company: one(companiesTable, {
-    fields: [appointmentsTable.companyId],
-    references: [companiesTable.id],
-  }),
-  createdBy: one(usersTable, {
-    relationName: 'createdAppointments',
-    fields: [appointmentsTable.createdBy],
-    references: [usersTable.id],
-  }),
-  consultation: one(consultationsTable, {
-    fields: [appointmentsTable.id],
-    references: [consultationsTable.appointmentId],
-  })
-}));
+);
 
-
-export const consultationsRelations = relations(consultationsTable, ({ one }) => ({
-  patient: one(patientsTable, {
-    fields: [consultationsTable.patientId],
-    references: [patientsTable.id],
+export const prescriptionsRelations = relations(
+  prescriptionsTable,
+  ({ one }) => ({
+    patient: one(patientsTable, {
+      fields: [prescriptionsTable.patientId],
+      references: [patientsTable.id],
+    }),
+    consultation: one(consultationsTable, {
+      fields: [prescriptionsTable.id],
+      references: [consultationsTable.prescriptionId],
+    }),
   }),
-  doctor: one(usersTable, {
-    fields: [consultationsTable.doctorId],
-    references: [usersTable.id],
-  }),
-  company: one(companiesTable, {
-    fields: [consultationsTable.companyId],
-    references: [companiesTable.id],
-  }),
-  appointment: one(appointmentsTable, {
-    fields: [consultationsTable.appointmentId],
-    references: [appointmentsTable.id],
-  }),
-  prescriptions: one(prescriptionsTable,{
-    fields: [consultationsTable.prescriptionId],
-    references: [prescriptionsTable.id],
-  }),
-  vitals: one(vitalsTable,{
-    fields: [consultationsTable.vitalId],
-    references: [vitalsTable.id],
-  })
-}))
-
-export const prescriptionsRelations = relations(prescriptionsTable, ({ one }) => ({
-  patient: one(patientsTable, {
-    fields: [prescriptionsTable.patientId],
-    references: [patientsTable.id],
-  }),
-  consultation: one(consultationsTable, {
-    fields: [prescriptionsTable.id],
-    references: [consultationsTable.prescriptionId],
-  })
-}));
+);
 
 export const vitalsRelations = relations(vitalsTable, ({ one }) => ({
   patient: one(patientsTable, {
@@ -141,5 +147,5 @@ export const vitalsRelations = relations(vitalsTable, ({ one }) => ({
   consultation: one(consultationsTable, {
     fields: [vitalsTable.id],
     references: [consultationsTable.vitalId],
-  })
-}))
+  }),
+}));

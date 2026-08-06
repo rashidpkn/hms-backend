@@ -6,7 +6,7 @@ export const prescriptionsTable = pgTable('prescriptions', (t) => ({
   patientId: t
     .integer('patient_id')
     .references(() => patientsTable.id)
-    .notNull(), 
+    .notNull(),
   items: t.jsonb('items').$type<PrescriptionItem[]>().notNull(),
 }));
 

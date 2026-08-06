@@ -1,4 +1,4 @@
-import { decimal, pgTable, pgEnum } from 'drizzle-orm/pg-core';
+import { pgTable, pgEnum } from 'drizzle-orm/pg-core';
 import {
   AddressType,
   timestamps,
@@ -38,13 +38,11 @@ export const patientsTable = pgTable('patients', (t) => ({
   emergencyContact: t
     .jsonb('emergency_contact')
     .$type<{ name: string; relationship: string; phoneNumber: string }>(),
-  insuranceDetails: t
-    .jsonb('insurance_details')
-    .$type<{
-      providerName: string;
-      policyNumber: string;
-      coverageDetails?: string;
-    }>(),
+  insuranceDetails: t.jsonb('insurance_details').$type<{
+    providerName: string;
+    policyNumber: string;
+    coverageDetails?: string;
+  }>(),
   notes: t.text('notes'),
   status: PatientStatusEnum().notNull().default(PatientStatus.ACTIVE),
   createdBy: t
@@ -59,7 +57,6 @@ export const patientsTable = pgTable('patients', (t) => ({
       onDelete: 'restrict',
     })
     .notNull(),
-
 
   ...timestamps,
 }));

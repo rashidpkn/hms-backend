@@ -13,7 +13,7 @@ export interface AuthUser {
 export const GetUser = createParamDecorator(
   (data: keyof AuthUser | undefined, ctx: ExecutionContext) => {
     const request = ctx.switchToHttp().getRequest();
-    const user: AuthUser = request.user;
+    const user: AuthUser = request.user as AuthUser;
 
     return data ? user?.[data] : user;
   },

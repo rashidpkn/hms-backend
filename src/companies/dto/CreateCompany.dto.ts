@@ -45,7 +45,10 @@ export class CreateCompanyDto {
   @IsOptional()
   address!: columnsHelpers.AddressType;
 
-  @ApiPropertyOptional({ enum: columnsHelpers.CompanyStatus, example: columnsHelpers.CompanyStatus.ACTIVE })
+  @ApiPropertyOptional({
+    enum: columnsHelpers.CompanyStatus,
+    example: columnsHelpers.CompanyStatus.ACTIVE,
+  })
   @IsEnum([
     columnsHelpers.CompanyStatus.ACTIVE,
     columnsHelpers.CompanyStatus.INACTIVE,

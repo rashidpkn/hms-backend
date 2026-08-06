@@ -21,7 +21,7 @@ import { ApiBearerAuth } from '@nestjs/swagger';
 @UseGuards(AuthGuard)
 @Controller('patients')
 export class PatientsController {
-  constructor(private readonly patientsService: PatientsService) { }
+  constructor(private readonly patientsService: PatientsService) {}
 
   //register patient
 
@@ -35,23 +35,33 @@ export class PatientsController {
     return await this.patientsService.create(createPatientDto);
   }
 
-
-  @Get("company/:id")
-  async getPatientsByCompany(@Param("id", ParseIntPipe) companyId: number, @GetUser() user: AuthUser) {
+  @Get('company/:id')
+  async getPatientsByCompany(
+    @Param('id', ParseIntPipe) companyId: number,
+    @GetUser() user: AuthUser,
+  ) {
     if (companyId != user.companyId) {
-      throw new ForbiddenException("You are not authorized to access this company's patients");
+      throw new ForbiddenException(
+        "You are not authorized to access this company's patients",
+      );
     }
     return this.patientsService.getPatientsByCompany(companyId);
   }
 
-  @Get("doctor/:id")
-  async getPatientsByDoctor(@Param("id", ParseIntPipe) doctorId: number, @GetUser() user: AuthUser) {
+  @Get('doctor/:id')
+  async getPatientsByDoctor(
+    @Param('id', ParseIntPipe) doctorId: number,
+    @GetUser() user: AuthUser,
+  ) {
     return this.patientsService.getPatientsByDoctor(doctorId, user.companyId);
   }
 
   // get a patient by id
   @Get(':id')
-  async getSingle(@Param("id", ParseIntPipe) id: number, @GetUser() user: AuthUser) {
+  async getSingle(
+    @Param('id', ParseIntPipe) id: number,
+    @GetUser() user: AuthUser,
+  ) {
     return this.patientsService.getSingle(id, user.companyId);
   }
 

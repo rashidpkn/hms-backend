@@ -7,7 +7,7 @@ import { and, eq } from 'drizzle-orm';
 
 @Injectable()
 export class PatientsService {
-  constructor(@InjectDb() private readonly db: DB) { }
+  constructor(@InjectDb() private readonly db: DB) {}
 
   async create(createPatientDto: RegisterPatientDto) {
     const lastPatient = await this.db.query.patientsTable.findFirst({
@@ -33,25 +33,31 @@ export class PatientsService {
     return {
       data: patients,
       message: 'Patients fetched successfully',
-    }
+    };
   }
 
   async getPatientsByDoctor(doctorId: number, companyId: number) {
     const patients = await this.db.query.patientsTable.findMany({
-      where: and(eq(patientsTable.primaryDoctorId, doctorId), eq(patientsTable.companyId, companyId)),
+      where: and(
+        eq(patientsTable.primaryDoctorId, doctorId),
+        eq(patientsTable.companyId, companyId),
+      ),
     });
     return {
       data: patients,
       message: 'Patients fetched successfully',
-    }
+    };
   }
   async getSingle(id: number, companyId: number) {
     const patient = await this.db.query.patientsTable.findFirst({
-      where: and(eq(patientsTable.id, id), eq(patientsTable.companyId, companyId)),
+      where: and(
+        eq(patientsTable.id, id),
+        eq(patientsTable.companyId, companyId),
+      ),
     });
     return {
       data: patient,
       message: 'Patient fetched successfully',
-    }
+    };
   }
 }
