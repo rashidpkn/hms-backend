@@ -1,95 +1,76 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
-import { CreateAppointmentDto } from './dto/create-appointment.dto';
-import { type DB } from 'src/database/client';
-import { InjectDb } from 'src/database/database.provider';
-import { appointmentsTable } from 'src/database/schema';
-import { and, eq } from 'drizzle-orm';
-import { RescheduleAppointmentDto } from './dto/reschedule-appointment.dto';
+import { InjectModel } from '@nestjs/mongoose';
+import { Model } from 'mongoose';
+import { SequencesService } from 'src/database/database.module';
+import { Company } from 'src/database/schema/company.schema';
+import { Appointment } from 'src/database/schema/appointments.schema';
 import { AppointmentStatus } from 'src/database/schema/columns.helpers';
+import { Patient } from 'src/database/schema/patients.schema';
+import { User } from 'src/database/schema/users.schema';
+import { CreateAppointmentDto } from './dto/create-appointment.dto';
+import { RescheduleAppointmentDto } from './dto/reschedule-appointment.dto';
 
 @Injectable()
 export class AppointmentsService {
-  constructor(@InjectDb() private readonly db: DB) {}
+  constructor(
+    @InjectModel(Appointment.name)
+    private readonly appointments: Model<Appointment>,
+    @InjectModel(Patient.name) private readonly patients: Model<Patient>,
+    @InjectModel(User.name) private readonly users: Model<User>,
+    @InjectModel(Company.name) private readonly companies: Model<Company>,
+    private readonly sequences: SequencesService,
+  ) {}
 
   async createAppointment(createAppointmentDto: CreateAppointmentDto) {
-    const data = await this.db
-      .insert(appointmentsTable)
-      .values(createAppointmentDto)
-      .returning()
-      .execute();
-    return {
-      data,
-      message: 'Appointment created successfully',
-    };
+    if (!(await this.patients.exists({ id: createAppointmentDto.patientId }))) {
+      throw new BadRequestException('Patient not found');
+    }
+    if (!(await this.users.exists({ id: createAppointmentDto.doctorId }))) {
+      throw new BadRequestException('Doctor not found');
+    }
+    if (
+      !(await this.companies.exists({ id: createAppointmentDto.companyId }))
+    ) {
+      throw new BadRequestException('Company not found');
+    }
+    if (!(await this.users.exists({ id: createAppointmentDto.createdBy }))) {
+      throw new BadRequestException('Creator not found');
+    }
+
+    const data = await this.appointments.create({
+      ...createAppointmentDto,
+      id: await this.sequences.next('appointments'),
+    });
+    return { data: [data], message: 'Appointment created successfully' };
   }
+
   async getAppointmentsByDoctor(doctorId: number, companyId: number) {
-    const data = await this.db
-      .select()
-      .from(appointmentsTable)
-      .where(
-        and(
-          eq(appointmentsTable.doctorId, doctorId),
-          eq(appointmentsTable.companyId, companyId),
-          eq(appointmentsTable.isDeleted, false),
-        ),
-      );
-    return {
-      data,
-      message: 'Appointments fetched successfully',
-    };
+    const data = await this.appointments
+      .find({ doctorId, companyId, isDeleted: false })
+      .exec();
+    return { data, message: 'Appointments fetched successfully' };
   }
 
   async getAppointmentsByPatient(patientId: number, companyId: number) {
-    const data = await this.db
-      .select()
-      .from(appointmentsTable)
-      .where(
-        and(
-          eq(appointmentsTable.patientId, patientId),
-          eq(appointmentsTable.companyId, companyId),
-          eq(appointmentsTable.isDeleted, false),
-        ),
-      );
-    return {
-      data,
-      message: 'Appointments fetched successfully',
-    };
+    const data = await this.appointments
+      .find({ patientId, companyId, isDeleted: false })
+      .exec();
+    return { data, message: 'Appointments fetched successfully' };
   }
 
   async getAppointmentsByCompany(companyId: number) {
-    const data = await this.db
-      .select()
-      .from(appointmentsTable)
-      .where(
-        and(
-          eq(appointmentsTable.companyId, companyId),
-          eq(appointmentsTable.isDeleted, false),
-        ),
-      );
-    return {
-      data,
-      message: 'Appointments fetched successfully',
-    };
+    const data = await this.appointments
+      .find({ companyId, isDeleted: false })
+      .exec();
+    return { data, message: 'Appointments fetched successfully' };
   }
 
   async getAppointmentById(id: number, companyId: number) {
-    const data = await this.db
-      .select()
-      .from(appointmentsTable)
-      .where(
-        and(
-          eq(appointmentsTable.id, id),
-          eq(appointmentsTable.companyId, companyId),
-          eq(appointmentsTable.isDeleted, false),
-        ),
-      );
-    if (data.length === 0) {
-      throw new BadRequestException('Appointment not found');
-    }
-    return {
-      data: data[0],
-      message: 'Appointment fetched successfully',
-    };
+    const data = await this.appointments
+      .findOne({ id, companyId, isDeleted: false })
+      .exec();
+    if (!data) throw new BadRequestException('Appointment not found');
+    return { data, message: 'Appointment fetched successfully' };
   }
 
   async rescheduleAppointment(
@@ -97,24 +78,15 @@ export class AppointmentsService {
     rescheduleAppointmentDto: RescheduleAppointmentDto,
     companyId: number,
   ) {
-    const data = await this.db
-      .update(appointmentsTable)
-      .set(rescheduleAppointmentDto)
-      .where(
-        and(
-          eq(appointmentsTable.id, id),
-          eq(appointmentsTable.companyId, companyId),
-          eq(appointmentsTable.isDeleted, false),
-        ),
+    const data = await this.appointments
+      .findOneAndUpdate(
+        { id, companyId, isDeleted: false },
+        { $set: rescheduleAppointmentDto },
+        { new: true, runValidators: true },
       )
-      .returning();
-    if (data.length === 0) {
-      throw new BadRequestException('Appointment not found');
-    }
-    return {
-      data: data[0],
-      message: 'Appointment rescheduled successfully',
-    };
+      .exec();
+    if (!data) throw new BadRequestException('Appointment not found');
+    return { data, message: 'Appointment rescheduled successfully' };
   }
 
   async updateAppointmentStatus(
@@ -122,47 +94,35 @@ export class AppointmentsService {
     status: AppointmentStatus,
     companyId: number,
   ) {
-    const data = await this.db
-      .update(appointmentsTable)
-      .set({ status })
-      .where(
-        and(
-          eq(appointmentsTable.id, id),
-          eq(appointmentsTable.companyId, companyId),
-          eq(appointmentsTable.isDeleted, false),
-          eq(appointmentsTable.status, AppointmentStatus.PENDING),
-        ),
+    const data = await this.appointments
+      .findOneAndUpdate(
+        {
+          id,
+          companyId,
+          isDeleted: false,
+          status: AppointmentStatus.PENDING,
+        },
+        { $set: { status } },
+        { new: true, runValidators: true },
       )
-      .returning();
-    if (data.length === 0) {
+      .exec();
+    if (!data) {
       throw new BadRequestException(
         'Appointment not found or status is not pending',
       );
     }
-    return {
-      data: data[0],
-      message: 'Appointment status updated successfully',
-    };
+    return { data, message: 'Appointment status updated successfully' };
   }
 
   async deleteAppointment(id: number, companyId: number) {
-    const data = await this.db
-      .update(appointmentsTable)
-      .set({ isDeleted: true, deletedAt: new Date() })
-      .where(
-        and(
-          eq(appointmentsTable.id, id),
-          eq(appointmentsTable.companyId, companyId),
-          eq(appointmentsTable.isDeleted, false),
-        ),
+    const data = await this.appointments
+      .findOneAndUpdate(
+        { id, companyId, isDeleted: false },
+        { $set: { isDeleted: true, deletedAt: new Date() } },
+        { new: true },
       )
-      .returning();
-    if (data.length === 0) {
-      throw new BadRequestException('Appointment not found');
-    }
-    return {
-      data: data[0],
-      message: 'Appointment deleted successfully',
-    };
+      .exec();
+    if (!data) throw new BadRequestException('Appointment not found');
+    return { data, message: 'Appointment deleted successfully' };
   }
 }

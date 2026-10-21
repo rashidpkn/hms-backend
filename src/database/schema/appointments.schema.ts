@@ -1,48 +1,51 @@
-import { pgTable } from 'drizzle-orm/pg-core';
+import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import {
   AppointmentMedium,
   AppointmentStatus,
   AppointmentType,
-  timestamps,
+  documentSchemaOptions,
 } from './columns.helpers';
-import { patientsTable } from './patients.schema';
-import { usersTable } from './users.schema';
-import { pgEnum } from 'drizzle-orm/pg-core';
-import { companiesTable } from './company.schema';
 
-export const appointmentStatusEnum = pgEnum(
-  'appointment_status',
-  AppointmentStatus,
-);
-export const appointmentMediumEnum = pgEnum(
-  'appointment_medium',
-  AppointmentMedium,
-);
-export const appointmentTypeEnum = pgEnum('appointment_type', AppointmentType);
+@Schema(documentSchemaOptions)
+export class Appointment {
+  @Prop({ type: Number, required: true, unique: true })
+  id!: number;
+  @Prop({ type: Number, required: true })
+  patientId!: number;
+  @Prop({ type: Number, required: true })
+  doctorId!: number;
+  @Prop({ type: Number, required: true })
+  companyId!: number;
+  @Prop({ type: Number, required: true })
+  createdBy!: number;
+  @Prop({ required: true })
+  date!: string;
+  @Prop({ required: true })
+  time!: string;
+  @Prop({
+    type: String,
+    enum: Object.values(AppointmentMedium),
+    default: AppointmentMedium.OFFLINE,
+  })
+  medium!: AppointmentMedium;
+  @Prop()
+  note?: string;
+  @Prop({
+    type: String,
+    enum: Object.values(AppointmentType),
+    default: AppointmentType.GENERAL,
+  })
+  type!: AppointmentType;
+  @Prop({
+    type: String,
+    enum: Object.values(AppointmentStatus),
+    default: AppointmentStatus.PENDING,
+  })
+  status!: AppointmentStatus;
+  @Prop({ type: Date, default: null })
+  deletedAt?: Date | null;
+  @Prop({ type: Boolean, default: false })
+  isDeleted!: boolean;
+}
 
-export const appointmentsTable = pgTable('appointments', (t) => ({
-  id: t.serial('id').primaryKey(),
-  patientId: t
-    .integer('patient_id')
-    .references(() => patientsTable.id)
-    .notNull(),
-  doctorId: t
-    .integer('doctor_id')
-    .references(() => usersTable.id)
-    .notNull(),
-  companyId: t
-    .integer('company_id')
-    .references(() => companiesTable.id)
-    .notNull(),
-  createdBy: t
-    .integer('created_by')
-    .references(() => usersTable.id)
-    .notNull(),
-  date: t.date('appointment_date').notNull(),
-  time: t.time('appointment_time').notNull(),
-  medium: appointmentMediumEnum().notNull().default(AppointmentMedium.OFFLINE),
-  note: t.text('note'),
-  type: appointmentTypeEnum().notNull().default(AppointmentType.GENERAL),
-  status: appointmentStatusEnum().notNull().default(AppointmentStatus.PENDING),
-  ...timestamps,
-}));
+export const AppointmentSchema = SchemaFactory.createForClass(Appointment);

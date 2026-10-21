@@ -1,46 +1,47 @@
-import { pgTable } from 'drizzle-orm/pg-core';
-import { patientsTable } from './patients.schema';
-import { usersTable } from './users.schema';
-import { companiesTable } from './company.schema';
-import { timestamps } from './columns.helpers';
-import { vitalsTable } from './vitals.schema';
-import { prescriptionsTable } from './prescriptions.schema';
-import { appointmentsTable } from './appointments.schema';
+import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
+import { documentSchemaOptions } from './columns.helpers';
 
-export const consultationsTable = pgTable('consultations', (t) => ({
-  id: t.serial('id').primaryKey(),
-  patientId: t
-    .integer('patient_id')
-    .references(() => patientsTable.id)
-    .notNull(),
-  doctorId: t
-    .integer('doctor_id')
-    .references(() => usersTable.id)
-    .notNull(),
-  companyId: t
-    .integer('company_id')
-    .references(() => companiesTable.id)
-    .notNull(),
-  appointmentId: t
-    .integer('appointment_id')
-    .references(() => appointmentsTable.id)
-    .unique(),
-  prescriptionId: t
-    .integer('prescription_id')
-    .references(() => prescriptionsTable.id)
-    .unique(),
-  vitalId: t
-    .integer('vital_id')
-    .references(() => vitalsTable.id)
-    .unique(),
-  chiefComplaint: t.text('chief_complaint'),
-  painScore: t.integer('pain_score'),
-  examination: t.text('examination'),
-  presentHistory: t.text('present_history'),
-  pastHistory: t.text('past_history'),
-  diagnosis: t.text('diagnosis'),
-  treatment: t.text('treatment').array(),
-  labOrders: t.text('lab_orders').array(),
-  notes: t.text('notes'),
-  ...timestamps,
-}));
+@Schema(documentSchemaOptions)
+export class Consultation {
+  @Prop({ type: Number, required: true, unique: true })
+  id!: number;
+  @Prop({ type: Number, required: true })
+  patientId!: number;
+  @Prop({ type: Number, required: true })
+  doctorId!: number;
+  @Prop({ type: Number, required: true })
+  companyId!: number;
+  @Prop({ type: Number })
+  appointmentId?: number;
+  @Prop({ type: Number })
+  prescriptionId?: number;
+  @Prop({ type: Number })
+  vitalId?: number;
+  @Prop()
+  chiefComplaint?: string;
+  @Prop({ type: Number })
+  painScore?: number;
+  @Prop()
+  examination?: string;
+  @Prop()
+  presentHistory?: string;
+  @Prop()
+  pastHistory?: string;
+  @Prop()
+  diagnosis?: string;
+  @Prop({ type: [String] })
+  treatment?: string[];
+  @Prop({ type: [String] })
+  labOrders?: string[];
+  @Prop()
+  notes?: string;
+  @Prop({ type: Date, default: null })
+  deletedAt?: Date | null;
+  @Prop({ type: Boolean, default: false })
+  isDeleted!: boolean;
+}
+
+export const ConsultationSchema = SchemaFactory.createForClass(Consultation);
+ConsultationSchema.index({ appointmentId: 1 }, { unique: true, sparse: true });
+ConsultationSchema.index({ prescriptionId: 1 }, { unique: true, sparse: true });
+ConsultationSchema.index({ vitalId: 1 }, { unique: true, sparse: true });

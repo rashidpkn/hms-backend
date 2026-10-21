@@ -1,24 +1,58 @@
-import { pgTable, pgEnum } from 'drizzle-orm/pg-core';
-import { UserRoles, UserStatus, timestamps } from './columns.helpers';
-import { companiesTable } from './company.schema';
+import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
+import {
+  documentSchemaOptions,
+  UserRoles,
+  UserStatus,
+} from './columns.helpers';
 
-export const UserRoleEnum = pgEnum('user_role', UserRoles);
-export const UserStatusEnum = pgEnum('user_status', UserStatus);
+@Schema(documentSchemaOptions)
+export class User {
+  @Prop({ type: Number, required: true, unique: true })
+  id!: number;
+  @Prop({ required: true })
+  firstName!: string;
+  @Prop({ required: true })
+  lastName!: string;
+  @Prop({ required: true, unique: true })
+  email!: string;
+  @Prop({ required: true })
+  password!: string;
+  @Prop({ type: Date })
+  lastLogin?: Date;
+  @Prop({ type: Date })
+  passwordChangedAt?: Date;
+  @Prop({
+    type: String,
+    enum: Object.values(UserStatus),
+    default: UserStatus.ACTIVE,
+  })
+  status!: UserStatus;
+  @Prop({
+    type: String,
+    enum: Object.values(UserRoles),
+    default: UserRoles.PHARMACIST,
+  })
+  role!: UserRoles;
+  @Prop({ type: Number, required: true })
+  companyId!: number;
+  @Prop({ type: String, default: null })
+  refreshToken?: string | null;
+  @Prop({ type: Date, default: null })
+  deletedAt?: Date | null;
+  @Prop({ type: Boolean, default: false })
+  isDeleted!: boolean;
+}
 
-export const usersTable = pgTable('users', (t) => ({
-  id: t.serial('id').primaryKey(),
-  firstName: t.text('first_name').notNull(),
-  lastName: t.text('last_name').notNull(),
-  email: t.text('email').notNull().unique(),
-  password: t.text('password').notNull(),
-  lastLogin: t.timestamp('last_login'),
-  passwordChangedAt: t.timestamp('password_changed_at'),
-  status: UserStatusEnum().default(UserStatus.ACTIVE).notNull(),
-  role: UserRoleEnum().default(UserRoles.PHARMACIST).notNull(),
-  companyId: t
-    .integer('company_id')
-    .notNull()
-    .references(() => companiesTable.id, { onDelete: 'restrict' }),
-  refreshToken: t.text('refresh_token'),
-  ...timestamps,
-}));
+export const UserSchema = SchemaFactory.createForClass(User);
+UserSchema.virtual('company', {
+  ref: 'Company',
+  localField: 'companyId',
+  foreignField: 'id',
+  justOne: true,
+});
+UserSchema.virtual('profile', {
+  ref: 'Profile',
+  localField: 'id',
+  foreignField: 'userId',
+  justOne: true,
+});

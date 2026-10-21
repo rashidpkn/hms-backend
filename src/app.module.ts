@@ -2,7 +2,8 @@ import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import configuration from './config/configuration';
-import { ConfigModule } from '@nestjs/config';
+import { ConfigModule, ConfigService } from '@nestjs/config';
+import { MongooseModule } from '@nestjs/mongoose';
 import { DatabaseModule } from './database/database.module';
 import { CompaniesModule } from './companies/companies.module';
 import { UsersModule } from './users/users.module';
@@ -48,6 +49,13 @@ import { PharmacyModule } from './pharmacy/pharmacy.module';
     }),
     ConfigModule.forRoot({
       load: [configuration],
+    }),
+    MongooseModule.forRootAsync({
+      imports: [ConfigModule],
+      inject: [ConfigService],
+      useFactory: (config: ConfigService) => ({
+        uri: config.getOrThrow<string>('mongodbUri'),
+      }),
     }),
     ThrottlerModule.forRoot({
       throttlers: [

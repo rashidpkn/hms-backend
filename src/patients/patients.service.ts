@@ -1,63 +1,60 @@
-import { Injectable } from '@nestjs/common';
-import type { DB } from 'src/database/client';
-import { InjectDb } from 'src/database/database.provider';
+import { BadRequestException, Injectable } from '@nestjs/common';
+import { InjectModel } from '@nestjs/mongoose';
+import { Model } from 'mongoose';
+import { SequencesService } from 'src/database/database.module';
+import { Company } from 'src/database/schema/company.schema';
+import { Patient } from 'src/database/schema/patients.schema';
+import { User } from 'src/database/schema/users.schema';
 import { RegisterPatientDto } from './dto/register.dto';
-import { patientsTable } from 'src/database/schema/patients.schema';
-import { and, eq } from 'drizzle-orm';
 
 @Injectable()
 export class PatientsService {
-  constructor(@InjectDb() private readonly db: DB) {}
+  constructor(
+    @InjectModel(Patient.name) private readonly patients: Model<Patient>,
+    @InjectModel(Company.name) private readonly companies: Model<Company>,
+    @InjectModel(User.name) private readonly users: Model<User>,
+    private readonly sequences: SequencesService,
+  ) {}
 
   async create(createPatientDto: RegisterPatientDto) {
-    const lastPatient = await this.db.query.patientsTable.findFirst({
-      where: eq(patientsTable.companyId, createPatientDto.companyId),
-      orderBy: (patients, { desc }) => [desc(patients.id)],
-    });
-    createPatientDto.patientCode = (lastPatient?.patientCode ?? 0) + 1;
+    if (!(await this.companies.exists({ id: createPatientDto.companyId }))) {
+      throw new BadRequestException('Company not found');
+    }
+    if (!(await this.users.exists({ id: createPatientDto.createdBy }))) {
+      throw new BadRequestException('Creator not found');
+    }
+    if (
+      createPatientDto.primaryDoctorId &&
+      !(await this.users.exists({ id: createPatientDto.primaryDoctorId }))
+    ) {
+      throw new BadRequestException('Primary doctor not found');
+    }
 
-    const data = await this.db
-      .insert(patientsTable)
-      .values(createPatientDto)
-      .returning();
-    return {
-      data: data[0],
-      message: 'Patient created successfully',
-    };
+    const patientCode = await this.sequences.next(
+      `patient-code-${createPatientDto.companyId}`,
+    );
+    const data = await this.patients.create({
+      ...createPatientDto,
+      id: await this.sequences.next('patients'),
+      patientCode,
+    });
+    return { data, message: 'Patient created successfully' };
   }
 
   async getPatientsByCompany(companyId: number) {
-    const patients = await this.db.query.patientsTable.findMany({
-      where: eq(patientsTable.companyId, companyId),
-    });
-    return {
-      data: patients,
-      message: 'Patients fetched successfully',
-    };
+    const data = await this.patients.find({ companyId }).exec();
+    return { data, message: 'Patients fetched successfully' };
   }
 
   async getPatientsByDoctor(doctorId: number, companyId: number) {
-    const patients = await this.db.query.patientsTable.findMany({
-      where: and(
-        eq(patientsTable.primaryDoctorId, doctorId),
-        eq(patientsTable.companyId, companyId),
-      ),
-    });
-    return {
-      data: patients,
-      message: 'Patients fetched successfully',
-    };
+    const data = await this.patients
+      .find({ primaryDoctorId: doctorId, companyId })
+      .exec();
+    return { data, message: 'Patients fetched successfully' };
   }
+
   async getSingle(id: number, companyId: number) {
-    const patient = await this.db.query.patientsTable.findFirst({
-      where: and(
-        eq(patientsTable.id, id),
-        eq(patientsTable.companyId, companyId),
-      ),
-    });
-    return {
-      data: patient,
-      message: 'Patient fetched successfully',
-    };
+    const data = await this.patients.findOne({ id, companyId }).exec();
+    return { data, message: 'Patient fetched successfully' };
   }
 }

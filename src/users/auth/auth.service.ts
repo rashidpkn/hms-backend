@@ -3,45 +3,34 @@ import {
   Injectable,
   UnauthorizedException,
 } from '@nestjs/common';
-import { InjectDb } from 'src/database/database.provider';
-import type { DB } from 'src/database/client';
+import { InjectModel } from '@nestjs/mongoose';
+import { Model } from 'mongoose';
 import { CommonResponse } from 'helpers/common.helpers';
-import { LoginDto } from './dto/login.dto';
-import { usersTable } from 'src/database/schema';
-import { and, eq } from 'drizzle-orm';
-import * as bcrypt from 'bcrypt';
+import { User } from 'src/database/schema/users.schema';
 import { UserStatus } from 'src/database/schema/columns.helpers';
+import * as bcrypt from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
 import configuration from 'src/config/configuration';
 import { RefreshTokenDto } from './dto/refreshToken.dto';
+import { LoginDto } from './dto/login.dto';
 
 @Injectable()
 export class AuthService {
   constructor(
-    @InjectDb() private readonly db: DB,
-    private jwtService: JwtService,
+    @InjectModel(User.name) private readonly users: Model<User>,
+    private readonly jwtService: JwtService,
   ) {}
 
   async login(body: LoginDto): Promise<CommonResponse<{}>> {
-    const user = await this.db.query.usersTable.findFirst({
-      where: eq(usersTable.email, body.email),
-    });
-
-    if (!user) {
-      throw new BadRequestException('User not found');
-    }
-
+    const user = await this.users.findOne({ email: body.email }).exec();
+    if (!user) throw new BadRequestException('User not found');
     if (user.status !== UserStatus.ACTIVE) {
       throw new BadRequestException('User not active');
     }
-    if (user.isDeleted) {
-      throw new BadRequestException('User not found');
-    }
+    if (user.isDeleted) throw new BadRequestException('User not found');
 
     const isPasswordValid = await bcrypt.compare(body.password, user.password);
-    if (!isPasswordValid) {
-      throw new BadRequestException('Invalid password');
-    }
+    if (!isPasswordValid) throw new BadRequestException('Invalid password');
 
     const payload = {
       id: user.id,
@@ -51,7 +40,6 @@ export class AuthService {
       firstName: user.firstName,
       lastName: user.lastName,
     };
-
     const accessToken = await this.jwtService.signAsync(payload, {
       secret: configuration().jwt.accessTokenSecret,
       expiresIn: '15m',
@@ -60,18 +48,15 @@ export class AuthService {
       { id: user.id },
       { secret: configuration().jwt.refreshTokenSecret, expiresIn: '7d' },
     );
-
-    await this.db
-      .update(usersTable)
-      .set({ lastLogin: new Date(), refreshToken })
-      .where(eq(usersTable.id, user.id));
+    await this.users
+      .updateOne(
+        { id: user.id },
+        { $set: { lastLogin: new Date(), refreshToken } },
+      )
+      .exec();
 
     return {
-      data: {
-        user: payload,
-        accessToken,
-        refreshToken,
-      },
+      data: { user: payload, accessToken, refreshToken },
       message: 'Login successful',
     };
   }
@@ -82,15 +67,13 @@ export class AuthService {
         body.refreshToken,
         { secret: configuration().jwt.refreshTokenSecret },
       );
-      const user = await this.db.query.usersTable.findFirst({
-        where: and(
-          eq(usersTable.id, verify.id),
-          eq(usersTable.refreshToken, body.refreshToken),
-        ),
-      });
+      const user = await this.users
+        .findOne({ id: verify.id, refreshToken: body.refreshToken })
+        .exec();
       if (!user || user.isDeleted || user.status !== UserStatus.ACTIVE) {
         throw new UnauthorizedException('Invalid token');
       }
+
       const payload = {
         id: user.id,
         role: user.role,
@@ -107,16 +90,11 @@ export class AuthService {
         { id: user.id },
         { secret: configuration().jwt.refreshTokenSecret, expiresIn: '7d' },
       );
-      await this.db
-        .update(usersTable)
-        .set({ refreshToken })
-        .where(eq(usersTable.id, user.id));
+      await this.users
+        .updateOne({ id: user.id }, { $set: { refreshToken } })
+        .exec();
       return {
-        data: {
-          user: payload,
-          accessToken,
-          refreshToken,
-        },
+        data: { user: payload, accessToken, refreshToken },
         message: 'Refresh token successful',
       };
     } catch {
@@ -125,13 +103,7 @@ export class AuthService {
   }
 
   async logout(id: number) {
-    await this.db
-      .update(usersTable)
-      .set({ refreshToken: null })
-      .where(eq(usersTable.id, id));
-    return {
-      data: null,
-      message: 'Logout Successfully',
-    };
+    await this.users.updateOne({ id }, { $set: { refreshToken: null } }).exec();
+    return { data: null, message: 'Logout Successfully' };
   }
 }

@@ -1,13 +1,24 @@
-import { boolean, timestamp } from 'drizzle-orm/pg-core';
+import type { SchemaOptions } from 'mongoose';
 
-export const timestamps = {
-  createdAt: timestamp('created_at').defaultNow().notNull(),
-  updatedAt: timestamp('updated_at')
-    .defaultNow()
-    .notNull()
-    .$onUpdate(() => new Date()),
-  deletedAt: timestamp('deleted_at'),
-  isDeleted: boolean('is_deleted').default(false).notNull(),
+export const documentSchemaOptions: SchemaOptions = {
+  timestamps: true,
+  id: false,
+  toJSON: {
+    virtuals: true,
+    transform: (_document, result) => {
+      Reflect.deleteProperty(result, '_id');
+      Reflect.deleteProperty(result, '__v');
+      return result;
+    },
+  },
+  toObject: {
+    virtuals: true,
+    transform: (_document, result) => {
+      Reflect.deleteProperty(result, '_id');
+      Reflect.deleteProperty(result, '__v');
+      return result;
+    },
+  },
 };
 
 export interface AddressType {
@@ -85,3 +96,15 @@ export enum AppointmentStatus {
   CANCELLED = 'Cancelled',
   COMPLETED = 'Completed',
 }
+
+export const WorkingDays = [
+  'Sunday',
+  'Monday',
+  'Tuesday',
+  'Wednesday',
+  'Thursday',
+  'Friday',
+  'Saturday',
+] as const;
+
+export type WorkingDay = (typeof WorkingDays)[number];

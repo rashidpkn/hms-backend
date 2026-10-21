@@ -1,20 +1,32 @@
-import { decimal, pgTable } from 'drizzle-orm/pg-core';
-import { patientsTable } from './patients.schema';
-import { timestamps } from './columns.helpers';
+import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
+import { documentSchemaOptions } from './columns.helpers';
 
-export const vitalsTable = pgTable('vitals', (t) => ({
-  id: t.serial('id').primaryKey(),
-  patientId: t
-    .integer('patient_id')
-    .references(() => patientsTable.id)
-    .notNull(),
-  height: decimal('height', { precision: 5, scale: 2 }), // Height in centimeters
-  weight: decimal('weight', { precision: 5, scale: 2 }), // Weight in kilograms
-  temperature: t.real('temperature'),
-  temperature_unit: t.text('temperature_unit'),
-  pulse: t.integer('pulse'),
-  spo2: t.real('spo2'),
-  respiratory_rate: t.integer('respiratory_rate'),
-  blood_pressure: t.text('blood_pressure'),
-  ...timestamps,
-}));
+@Schema(documentSchemaOptions)
+export class Vital {
+  @Prop({ type: Number, required: true, unique: true })
+  id!: number;
+  @Prop({ type: Number, required: true })
+  patientId!: number;
+  @Prop({ type: String })
+  height?: string;
+  @Prop({ type: String })
+  weight?: string;
+  @Prop({ type: Number })
+  temperature?: number;
+  @Prop()
+  temperature_unit?: string;
+  @Prop({ type: Number })
+  pulse?: number;
+  @Prop({ type: Number })
+  spo2?: number;
+  @Prop({ type: Number })
+  respiratory_rate?: number;
+  @Prop()
+  blood_pressure?: string;
+  @Prop({ type: Date, default: null })
+  deletedAt?: Date | null;
+  @Prop({ type: Boolean, default: false })
+  isDeleted!: boolean;
+}
+
+export const VitalSchema = SchemaFactory.createForClass(Vital);

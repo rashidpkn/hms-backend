@@ -1,14 +1,5 @@
-import { pgTable } from 'drizzle-orm/pg-core';
-import { patientsTable } from './patients.schema';
-
-export const prescriptionsTable = pgTable('prescriptions', (t) => ({
-  id: t.serial('id').primaryKey(),
-  patientId: t
-    .integer('patient_id')
-    .references(() => patientsTable.id)
-    .notNull(),
-  items: t.jsonb('items').$type<PrescriptionItem[]>().notNull(),
-}));
+import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
+import { documentSchemaOptions } from './columns.helpers';
 
 export type PrescriptionItem = {
   name: string;
@@ -17,3 +8,15 @@ export type PrescriptionItem = {
   foodRelation: string;
   duration: string;
 };
+
+@Schema(documentSchemaOptions)
+export class Prescription {
+  @Prop({ type: Number, required: true, unique: true })
+  id!: number;
+  @Prop({ type: Number, required: true })
+  patientId!: number;
+  @Prop({ type: [Object], required: true })
+  items!: PrescriptionItem[];
+}
+
+export const PrescriptionSchema = SchemaFactory.createForClass(Prescription);
