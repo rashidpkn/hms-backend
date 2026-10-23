@@ -2,7 +2,6 @@ import {
   Body,
   Controller,
   Delete,
-  ForbiddenException,
   Get,
   Param,
   ParseIntPipe,
@@ -30,64 +29,38 @@ export class AppointmentsController {
     @Body() createAppointmentDto: CreateAppointmentDto,
     @GetUser() user: AuthUser,
   ) {
-    createAppointmentDto.companyId = user.companyId;
     createAppointmentDto.createdBy = user.id;
     return this.appointmentsService.createAppointment(createAppointmentDto);
   }
 
   @Get('doctor/:id')
-  async getAppointmentsByDoctor(
-    @Param('id', ParseIntPipe) doctorId: number,
-    @GetUser() user: AuthUser,
-  ) {
-    return this.appointmentsService.getAppointmentsByDoctor(
-      doctorId,
-      user.companyId,
-    );
+  async getAppointmentsByDoctor(@Param('id', ParseIntPipe) doctorId: number) {
+    return this.appointmentsService.getAppointmentsByDoctor(doctorId);
   }
 
   @Get('patient/:id')
-  async getAppointmentsByPatient(
-    @Param('id', ParseIntPipe) patientId: number,
-    @GetUser() user: AuthUser,
-  ) {
-    return this.appointmentsService.getAppointmentsByPatient(
-      patientId,
-      user.companyId,
-    );
+  async getAppointmentsByPatient(@Param('id', ParseIntPipe) patientId: number) {
+    return this.appointmentsService.getAppointmentsByPatient(patientId);
   }
 
-  @Get('company/:id')
-  async getAppointmentsByCompany(
-    @Param('id', ParseIntPipe) companyId: number,
-    @GetUser() user: AuthUser,
-  ) {
-    if (companyId != user.companyId) {
-      throw new ForbiddenException(
-        "You are not authorized to access this company's appointments",
-      );
-    }
-    return this.appointmentsService.getAppointmentsByCompany(companyId);
+  @Get()
+  getAll() {
+    return this.appointmentsService.getAllAppointments();
   }
 
   @Get(':id')
-  async getAppointmentById(
-    @Param('id', ParseIntPipe) id: number,
-    @GetUser() user: AuthUser,
-  ) {
-    return this.appointmentsService.getAppointmentById(id, user.companyId);
+  async getAppointmentById(@Param('id', ParseIntPipe) id: number) {
+    return this.appointmentsService.getAppointmentById(id);
   }
 
   @Patch('reschedule/:id')
   async rescheduleAppointment(
     @Param('id', ParseIntPipe) id: number,
     @Body() rescheduleAppointmentDto: RescheduleAppointmentDto,
-    @GetUser() user: AuthUser,
   ) {
     return this.appointmentsService.rescheduleAppointment(
       id,
       rescheduleAppointmentDto,
-      user.companyId,
     );
   }
 
@@ -95,20 +68,12 @@ export class AppointmentsController {
   async updateAppointmentStatus(
     @Param('id', ParseIntPipe) id: number,
     @Body() body: ChangeStatusDto,
-    @GetUser() user: AuthUser,
   ) {
-    return this.appointmentsService.updateAppointmentStatus(
-      id,
-      body.status,
-      user.companyId,
-    );
+    return this.appointmentsService.updateAppointmentStatus(id, body.status);
   }
 
   @Delete(':id')
-  async deleteAppointment(
-    @Param('id', ParseIntPipe) id: number,
-    @GetUser() user: AuthUser,
-  ) {
-    return this.appointmentsService.deleteAppointment(id, user.companyId);
+  async deleteAppointment(@Param('id', ParseIntPipe) id: number) {
+    return this.appointmentsService.deleteAppointment(id);
   }
 }

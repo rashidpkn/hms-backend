@@ -29,12 +29,6 @@ export interface AddressType {
   country: string;
 }
 
-export enum CompanyStatus {
-  ACTIVE = 'ACTIVE',
-  INACTIVE = 'INACTIVE',
-  SUSPENDED = 'SUSPENDED',
-}
-
 export enum UserRoles {
   MANAGER = 'MANAGER',
   DOCTOR = 'DOCTOR',

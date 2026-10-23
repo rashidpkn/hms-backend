@@ -5,7 +5,6 @@ import configuration from './config/configuration';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { MongooseModule } from '@nestjs/mongoose';
 import { DatabaseModule } from './database/database.module';
-import { CompaniesModule } from './companies/companies.module';
 import { UsersModule } from './users/users.module';
 import { PatientsModule } from './patients/patients.module';
 import { JwtModule } from '@nestjs/jwt';
@@ -66,7 +65,6 @@ import { PharmacyModule } from './pharmacy/pharmacy.module';
       ],
     }),
     DatabaseModule,
-    CompaniesModule,
     UsersModule,
     PatientsModule,
     JwtModule.register({ global: true }),

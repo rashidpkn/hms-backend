@@ -9,8 +9,6 @@ export class Consultation {
   patientId!: number;
   @Prop({ type: Number, required: true })
   doctorId!: number;
-  @Prop({ type: Number, required: true })
-  companyId!: number;
   @Prop({ type: Number })
   appointmentId?: number;
   @Prop({ type: Number })

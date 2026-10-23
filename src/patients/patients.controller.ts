@@ -2,7 +2,6 @@ import {
   Body,
   Controller,
   Delete,
-  ForbiddenException,
   Get,
   Param,
   ParseIntPipe,
@@ -31,38 +30,23 @@ export class PatientsController {
     @GetUser() user: AuthUser,
   ) {
     createPatientDto.createdBy = user.id;
-    createPatientDto.companyId = user.companyId;
     return await this.patientsService.create(createPatientDto);
   }
 
-  @Get('company/:id')
-  async getPatientsByCompany(
-    @Param('id', ParseIntPipe) companyId: number,
-    @GetUser() user: AuthUser,
-  ) {
-    if (companyId != user.companyId) {
-      throw new ForbiddenException(
-        "You are not authorized to access this company's patients",
-      );
-    }
-    return this.patientsService.getPatientsByCompany(companyId);
+  @Get()
+  getAll() {
+    return this.patientsService.getAllPatients();
   }
 
   @Get('doctor/:id')
-  async getPatientsByDoctor(
-    @Param('id', ParseIntPipe) doctorId: number,
-    @GetUser() user: AuthUser,
-  ) {
-    return this.patientsService.getPatientsByDoctor(doctorId, user.companyId);
+  async getPatientsByDoctor(@Param('id', ParseIntPipe) doctorId: number) {
+    return this.patientsService.getPatientsByDoctor(doctorId);
   }
 
   // get a patient by id
   @Get(':id')
-  async getSingle(
-    @Param('id', ParseIntPipe) id: number,
-    @GetUser() user: AuthUser,
-  ) {
-    return this.patientsService.getSingle(id, user.companyId);
+  async getSingle(@Param('id', ParseIntPipe) id: number) {
+    return this.patientsService.getSingle(id);
   }
 
   // update a patient

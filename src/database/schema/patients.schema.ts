@@ -59,8 +59,6 @@ export class Patient {
   status!: PatientStatus;
   @Prop({ type: Number, required: true })
   createdBy!: number;
-  @Prop({ type: Number, required: true })
-  companyId!: number;
   @Prop({ type: Date, default: null })
   deletedAt?: Date | null;
   @Prop({ type: Boolean, default: false })
@@ -68,4 +66,4 @@ export class Patient {
 }
 
 export const PatientSchema = SchemaFactory.createForClass(Patient);
-PatientSchema.index({ companyId: 1, patientCode: 1 }, { unique: true });
+PatientSchema.index({ patientCode: 1 }, { unique: true });

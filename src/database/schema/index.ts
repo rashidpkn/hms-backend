@@ -1,5 +1,4 @@
 export * from './appointments.schema';
-export * from './company.schema';
 export * from './consultations.schema';
 export * from './patients.schema';
 export * from './prescriptions.schema';

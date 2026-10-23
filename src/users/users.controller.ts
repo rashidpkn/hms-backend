@@ -14,7 +14,6 @@ import { RolesGuard } from './auth/roles.guard';
 import { AuthGuard } from './auth/auth.guard';
 import { UserRoles } from 'src/database/schema/columns.helpers';
 import { Roles } from './auth/roles.decorator';
-import { type AuthUser, GetUser } from './auth/getUser.decorator';
 import { ApiBearerAuth } from '@nestjs/swagger';
 
 @ApiBearerAuth()
@@ -26,16 +25,15 @@ export class UsersController {
   //register user
   @Roles(UserRoles.MANAGER)
   @Post()
-  registerUser(@Body() body: RegisterUserDto, @GetUser() user: AuthUser) {
-    body.companyId = user.companyId;
+  registerUser(@Body() body: RegisterUserDto) {
     return this.usersService.registerUser(body);
   }
 
   //get all users
   @Roles(UserRoles.MANAGER)
   @Get()
-  getAllUsers(@GetUser() user: AuthUser) {
-    return this.usersService.getAllUsers(user);
+  getAllUsers() {
+    return this.usersService.getAllUsers();
   }
 
   //get user by id

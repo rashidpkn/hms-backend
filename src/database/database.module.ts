@@ -4,8 +4,6 @@ import { Model } from 'mongoose';
 import {
   Appointment,
   AppointmentSchema,
-  Company,
-  CompanySchema,
   Consultation,
   ConsultationSchema,
   Patient,
@@ -45,7 +43,6 @@ export class SequencesService {
   imports: [
     MongooseModule.forFeature([
       { name: Appointment.name, schema: AppointmentSchema },
-      { name: Company.name, schema: CompanySchema },
       { name: Consultation.name, schema: ConsultationSchema },
       { name: Patient.name, schema: PatientSchema },
       { name: Prescription.name, schema: PrescriptionSchema },

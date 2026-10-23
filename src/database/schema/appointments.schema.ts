@@ -15,8 +15,6 @@ export class Appointment {
   @Prop({ type: Number, required: true })
   doctorId!: number;
   @Prop({ type: Number, required: true })
-  companyId!: number;
-  @Prop({ type: Number, required: true })
   createdBy!: number;
   @Prop({ required: true })
   date!: string;

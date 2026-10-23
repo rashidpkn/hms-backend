@@ -2,7 +2,6 @@ import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { SequencesService } from 'src/database/database.module';
-import { Company } from 'src/database/schema/company.schema';
 import { Patient } from 'src/database/schema/patients.schema';
 import { User } from 'src/database/schema/users.schema';
 import { RegisterPatientDto } from './dto/register.dto';
@@ -11,15 +10,11 @@ import { RegisterPatientDto } from './dto/register.dto';
 export class PatientsService {
   constructor(
     @InjectModel(Patient.name) private readonly patients: Model<Patient>,
-    @InjectModel(Company.name) private readonly companies: Model<Company>,
     @InjectModel(User.name) private readonly users: Model<User>,
     private readonly sequences: SequencesService,
   ) {}
 
   async create(createPatientDto: RegisterPatientDto) {
-    if (!(await this.companies.exists({ id: createPatientDto.companyId }))) {
-      throw new BadRequestException('Company not found');
-    }
     if (!(await this.users.exists({ id: createPatientDto.createdBy }))) {
       throw new BadRequestException('Creator not found');
     }
@@ -30,31 +25,27 @@ export class PatientsService {
       throw new BadRequestException('Primary doctor not found');
     }
 
-    const patientCode = await this.sequences.next(
-      `patient-code-${createPatientDto.companyId}`,
-    );
+    const id = await this.sequences.next('patients');
     const data = await this.patients.create({
       ...createPatientDto,
-      id: await this.sequences.next('patients'),
-      patientCode,
+      id,
+      patientCode: id,
     });
     return { data, message: 'Patient created successfully' };
   }
 
-  async getPatientsByCompany(companyId: number) {
-    const data = await this.patients.find({ companyId }).exec();
+  async getAllPatients() {
+    const data = await this.patients.find({}).exec();
     return { data, message: 'Patients fetched successfully' };
   }
 
-  async getPatientsByDoctor(doctorId: number, companyId: number) {
-    const data = await this.patients
-      .find({ primaryDoctorId: doctorId, companyId })
-      .exec();
+  async getPatientsByDoctor(doctorId: number) {
+    const data = await this.patients.find({ primaryDoctorId: doctorId }).exec();
     return { data, message: 'Patients fetched successfully' };
   }
 
-  async getSingle(id: number, companyId: number) {
-    const data = await this.patients.findOne({ id, companyId }).exec();
+  async getSingle(id: number) {
+    const data = await this.patients.findOne({ id }).exec();
     return { data, message: 'Patient fetched successfully' };
   }
 }

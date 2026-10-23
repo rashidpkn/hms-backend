@@ -33,8 +33,6 @@ export class User {
     default: UserRoles.PHARMACIST,
   })
   role!: UserRoles;
-  @Prop({ type: Number, required: true })
-  companyId!: number;
   @Prop({ type: String, default: null })
   refreshToken?: string | null;
   @Prop({ type: Date, default: null })
@@ -44,12 +42,6 @@ export class User {
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);
-UserSchema.virtual('company', {
-  ref: 'Company',
-  localField: 'companyId',
-  foreignField: 'id',
-  justOne: true,
-});
 UserSchema.virtual('profile', {
   ref: 'Profile',
   localField: 'id',

@@ -3,11 +3,9 @@ import { Transform } from 'class-transformer';
 import {
   IsEmail,
   IsEnum,
-  IsInt,
   IsNotEmpty,
   IsOptional,
   IsPhoneNumber,
-  IsPositive,
   IsString,
 } from 'class-validator';
 import type { AddressType } from 'src/database/schema/columns.helpers';
@@ -53,12 +51,6 @@ export class RegisterUserDto {
   @IsOptional()
   @Transform(({ value }: { value: string | number }) => value.toString().trim())
   salary!: string;
-
-  @ApiProperty({ example: 1 })
-  @IsPositive()
-  @IsInt()
-  @IsNotEmpty()
-  companyId!: number;
 
   @ApiProperty({ enum: UserRoles, example: UserRoles.DOCTOR })
   @IsEnum(UserRoles)

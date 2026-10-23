@@ -38,6 +38,19 @@ to `.env` and replace the example token secrets.
 Changing the connection URI does not import existing PostgreSQL records. When
 importing data, initialize the MongoDB sequence counters to the existing IDs.
 
+## Single-practice data model
+
+The API uses one practice database. Users, patients, appointments, and consultations
+have no company field or company relationship. Company endpoints are removed.
+Use authenticated `GET /patients` and `GET /appointments` to list records.
+New patients use their globally allocated patient ID as their patient code.
+
+This source change does not migrate or delete stored records. Before reusing a
+legacy database, back it up, retain the intended practice's records, reconcile
+patient codes with the global patient IDs and sequence, remove obsolete tenant
+fields/collections, and replace the old compound patient-code index with the new
+unique patient-code index. Do not merge separate practices' data implicitly.
+
 ## Compile and run the project
 
 ```bash

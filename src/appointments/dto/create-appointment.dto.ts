@@ -25,9 +25,6 @@ export class CreateAppointmentDto {
   doctorId!: number;
 
   @IsEmpty()
-  companyId!: number;
-
-  @IsEmpty()
   createdBy!: number;
 
   @ApiProperty({ example: '2026-08-01' })
