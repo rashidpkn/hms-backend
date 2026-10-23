@@ -7,6 +7,7 @@ import {
 import { JwtService } from '@nestjs/jwt';
 import { Request } from 'express';
 import configuration from 'src/config/configuration';
+import { UserRoles } from 'src/database/schema/columns.helpers';
 
 @Injectable()
 export class AuthGuard implements CanActivate {
@@ -26,6 +27,9 @@ export class AuthGuard implements CanActivate {
       });
       // 💡 We're assigning the payload to the request object here
       // so that we can access it in our route handlers
+      if (!Object.values(UserRoles).includes(payload.role)) {
+        throw new UnauthorizedException('Unsupported user role');
+      }
       request['user'] = payload;
     } catch {
       throw new UnauthorizedException();

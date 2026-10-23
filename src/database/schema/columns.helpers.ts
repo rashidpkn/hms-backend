@@ -36,13 +36,10 @@ export enum CompanyStatus {
 }
 
 export enum UserRoles {
-  ADMIN = 'ADMIN',
   MANAGER = 'MANAGER',
   DOCTOR = 'DOCTOR',
   PHARMACIST = 'PHARMACIST',
-  RECEPTIONIST = 'RECEPTIONIST',
   LAB_TECHNICIAN = 'LAB_TECHNICIAN',
-  BILLING = 'BILLING',
 }
 
 export enum UserStatus {

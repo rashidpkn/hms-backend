@@ -24,7 +24,7 @@ export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
   //register user
-  @Roles(UserRoles.ADMIN, UserRoles.MANAGER)
+  @Roles(UserRoles.MANAGER)
   @Post()
   registerUser(@Body() body: RegisterUserDto, @GetUser() user: AuthUser) {
     body.companyId = user.companyId;
@@ -32,28 +32,28 @@ export class UsersController {
   }
 
   //get all users
-  @Roles(UserRoles.ADMIN, UserRoles.MANAGER)
+  @Roles(UserRoles.MANAGER)
   @Get()
   getAllUsers(@GetUser() user: AuthUser) {
     return this.usersService.getAllUsers(user);
   }
 
   //get user by id
-  @Roles(UserRoles.ADMIN, UserRoles.MANAGER)
+  @Roles(UserRoles.MANAGER)
   @Get(':id')
   getUserById(@Param('id', ParseIntPipe) id: number) {
     return this.usersService.getUserById(id);
   }
 
   //update user by id
-  @Roles(UserRoles.ADMIN, UserRoles.MANAGER)
+  @Roles(UserRoles.MANAGER)
   @Put(':id')
   updateUserById() {
     // return this.usersService.updateUserById();
   }
 
   //delete user by id
-  @Roles(UserRoles.ADMIN, UserRoles.MANAGER)
+  @Roles(UserRoles.MANAGER)
   @Post(':id')
   deleteUserById() {
     // return this.usersService.deleteUserById();

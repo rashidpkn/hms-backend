@@ -7,7 +7,7 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { CommonResponse } from 'helpers/common.helpers';
 import { User } from 'src/database/schema/users.schema';
-import { UserStatus } from 'src/database/schema/columns.helpers';
+import { UserRoles, UserStatus } from 'src/database/schema/columns.helpers';
 import * as bcrypt from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
 import configuration from 'src/config/configuration';
@@ -28,6 +28,9 @@ export class AuthService {
       throw new BadRequestException('User not active');
     }
     if (user.isDeleted) throw new BadRequestException('User not found');
+    if (!Object.values(UserRoles).includes(user.role)) {
+      throw new UnauthorizedException('Unsupported user role');
+    }
 
     const isPasswordValid = await bcrypt.compare(body.password, user.password);
     if (!isPasswordValid) throw new BadRequestException('Invalid password');
@@ -70,7 +73,12 @@ export class AuthService {
       const user = await this.users
         .findOne({ id: verify.id, refreshToken: body.refreshToken })
         .exec();
-      if (!user || user.isDeleted || user.status !== UserStatus.ACTIVE) {
+      if (
+        !user ||
+        user.isDeleted ||
+        user.status !== UserStatus.ACTIVE ||
+        !Object.values(UserRoles).includes(user.role)
+      ) {
         throw new UnauthorizedException('Invalid token');
       }
 
